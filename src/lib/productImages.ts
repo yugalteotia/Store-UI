@@ -1,0 +1,72 @@
+// Generic placeholder product/category photos for prototyping.
+// Only entries whose files were actually downloaded and verified are included.
+// See public/images/IMAGES.md for sources.
+
+export const PRODUCT_IMAGES: Record<string, string> = {
+  'Fresh Apples (1 kg)': '/images/fresh-apples.jpg',
+  'Bananas (1 dozen)': '/images/bananas.jpg',
+  'Alphonso Mangoes (1 kg)': '/images/alphonso-mangoes.jpg',
+  'Fresh Oranges (1 kg)': '/images/fresh-oranges.jpg',
+  'Green Grapes (500 g)': '/images/green-grapes.jpg',
+  'Fresh Tomatoes (1 kg)': '/images/fresh-tomatoes.jpg',
+  'Potatoes (1 kg)': '/images/potatoes.jpg',
+  'Onions (1 kg)': '/images/onions.jpg',
+  'Carrots (500 g)': '/images/carrots.jpg',
+  'Fresh Spinach (250 g)': '/images/fresh-spinach.jpg',
+  'Amul Taaza Milk (1 L)': '/images/amul-taaza-milk.jpg',
+  'Amul Butter (100 g)': '/images/amul-butter.jpg',
+  'Amul Cheese Slices (200 g)': '/images/amul-cheese-slices.jpg',
+  'Plain Curd (400 g)': '/images/plain-curd.jpg',
+  'Paneer (200 g)': '/images/paneer.jpg',
+  'Burger Buns (4 pieces)': '/images/burger-buns.jpg',
+  'Chocolate Muffins (2 pieces)': '/images/chocolate-muffins.jpg',
+  'Rusk Toast (200 g)': '/images/rusk-toast.jpg',
+  'Plain Croissants (2 pieces)': '/images/plain-croissants.jpg',
+  'Tata Tea Premium (250 g)': '/images/tata-tea-premium.jpg',
+  'Nescafe Classic Coffee (100 g)': '/images/nescafe-classic-coffee.jpg',
+  'Real Orange Juice (1 L)': '/images/real-orange-juice.jpg',
+  'Coca-Cola (750 ml)': '/images/coca-cola.jpg',
+  'Packaged Drinking Water (1 L)': '/images/packaged-drinking-water.jpg',
+  'Tata Salt (1 kg)': '/images/tata-salt.jpg',
+  'India Gate Basmati Rice (1 kg)': '/images/india-gate-basmati-rice.jpg',
+  'Aashirvaad Atta (5 kg)': '/images/aashirvaad-atta.jpg',
+  'Toor Dal (1 kg)': '/images/toor-dal.jpg',
+  'Fortune Sunflower Oil (1 L)': '/images/fortune-sunflower-oil.jpg',
+  'Lays Classic Salted Chips (52 g)': '/images/lays-classic-salted-chips.jpg',
+  'Kurkure Masala Munch (90 g)': '/images/kurkure-masala-munch.jpg',
+  'Parle-G Biscuits (250 g)': '/images/parle-g-biscuits.jpg',
+  'Oreo Original Cookies (120 g)': '/images/oreo-original-cookies.jpg',
+  'Haldirams Bhujia (200 g)': '/images/haldirams-bhujia.jpg',
+  'McCain French Fries (420 g)': '/images/mccain-french-fries.jpg',
+  'Frozen Green Peas (500 g)': '/images/frozen-green-peas.jpg',
+  'Frozen Sweet Corn (500 g)': '/images/frozen-sweet-corn.jpg',
+  'Frozen Veggie Nuggets (400 g)': '/images/frozen-veggie-nuggets.jpg',
+  'Frozen Parathas (400 g)': '/images/frozen-parathas.jpg',
+  'Dove Beauty Bathing Bar (100 g)': '/images/dove-beauty-bathing-bar.jpg',
+  'Colgate Strong Teeth Toothpaste (150 g)': '/images/colgate-strong-teeth-toothpaste.jpg',
+  'Dettol Original Handwash (200 ml)': '/images/dettol-original-handwash.jpg',
+  'Head & Shoulders Shampoo (180 ml)': '/images/head-shoulders-shampoo.jpg',
+  'Whisper Sanitary Pads (pack)': '/images/whisper-sanitary-pads.jpg',
+  'Vim Dishwash Liquid (250 ml)': '/images/vim-dishwash-liquid.jpg',
+  'Surf Excel Detergent Powder (1 kg)': '/images/surf-excel-detergent-powder.jpg',
+  'Harpic Toilet Cleaner (500 ml)': '/images/harpic-toilet-cleaner.jpg',
+  'Scotch-Brite Scrub Pad (pack of 3)': '/images/scotch-brite-scrub-pad.jpg',
+  'Garbage Bags (medium pack)': '/images/garbage-bags.jpg',
+}
+
+export function imageForProduct(name: string, category: string): string | null {
+  return PRODUCT_IMAGES[name] ?? CATEGORY_IMAGES[category] ?? null
+}
+
+export const CATEGORY_IMAGES: Record<string, string> = {
+  'Fruits': '/images/category-fruits.jpg',
+  'Vegetables': '/images/category-vegetables.jpg',
+  'Dairy': '/images/category-dairy.jpg',
+  'Bakery': '/images/category-bakery.jpg',
+  'Beverages': '/images/category-beverages.jpg',
+  'Pantry Staples': '/images/category-pantry-staples.jpg',
+  'Snacks': '/images/category-snacks.jpg',
+  'Frozen Foods': '/images/category-frozen-foods.jpg',
+  'Personal Care': '/images/category-personal-care.jpg',
+  'Household Essentials': '/images/category-household-essentials.jpg',
+}
