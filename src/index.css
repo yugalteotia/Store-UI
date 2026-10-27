@@ -1,101 +1,54 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  /* Flipkart-inspired palette: blue header, saffron action, clean white cards */
-  --color-fk: #2874f0;
-  --color-fk-dark: #1d5fc4;
-  --color-fk-light: #e8f0fe;
-  --color-saffron: #ff9f00;
-  --color-saffron-dark: #fb641b;
-  --color-leaf-50: #f0fdf4;
-  --color-leaf-100: #dcfce7;
-  --color-leaf-600: #15803d;
-  --color-leaf-700: #166534;
-  --color-cream: #f1f3f6;
-  --font-sans: 'Inter', ui-sans-system, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+:root {
+  --cream: #fff8ec;
+  --plum: #302034;
+  --citrus: #f47b35;
+  --butter: #f5d96b;
+  --leaf: #547451;
+  --peach: #f5d1bd;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
 body {
-  background: var(--color-cream);
-  color: #212121;
-  font-family: var(--font-sans);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--cream);
+  color: var(--plum);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+.dark body { background: #241722; color: #fdf6ea; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #f47b35;
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
-/* --- Why the old UI felt laggy: every navigation replaced the whole page
-   with a "Loading..." line while a fresh fetch ran. The fixes below are:
-   keepPreviousData + 5-min staleTime (App.tsx) so navigation reuses data,
-   skeleton cards instead of blank text, and a fast page fade/slide so a
-   transition is visible instead of a flash to white. --- */
-
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.page-in {
-  animation: page-in 0.28s ease-out both;
-}
-
-@keyframes drawer-in {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-.drawer-in {
-  animation: drawer-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.fade-in {
-  animation: fade-in 0.25s ease-out both;
-}
-
-@keyframes shimmer {
-  from { background-position: -400px 0; }
-  to { background-position: 400px 0; }
-}
-.skeleton {
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-  background-size: 800px 100%;
-  animation: shimmer 1.4s infinite linear;
-  border-radius: 0.5rem;
-}
-
-@keyframes cart-pop {
+@keyframes basket-pop {
   0% { transform: scale(1); }
-  40% { transform: scale(1.25); }
+  40% { transform: scale(1.35); }
   100% { transform: scale(1); }
 }
-.cart-pop {
-  animation: cart-pop 0.35s ease-out;
+.basket-pop { animation: basket-pop 0.35s ease; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.45s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .basket-pop, .fade-up { animation: none; }
 }
 
-@keyframes hero-fade {
-  from { opacity: 0; transform: scale(1.02); }
-  to { opacity: 1; transform: scale(1); }
-}
-.hero-fade {
-  animation: hero-fade 0.6s ease-out both;
-}
-
-button, a {
-  transition: transform 0.12s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-}
-button:active {
-  transform: scale(0.97);
-}
-
-.product-card {
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
-}
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-.product-card img {
-  transition: transform 0.35s ease;
-}
-.product-card:hover img {
-  transform: scale(1.06);
+.blob {
+  border-radius: 58% 42% 55% 45% / 48% 55% 45% 52%;
 }

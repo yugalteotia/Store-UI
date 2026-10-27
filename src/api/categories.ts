@@ -1,8 +1,47 @@
-// Generic placeholder product/category photos for prototyping.
-// Only entries whose files were actually downloaded and verified are included.
-// See public/images/IMAGES.md for sources.
+/**
+ * Categories, derived from the backend's seed migration V5 (there is NO
+ * GET /categories endpoint). Seed order gives IDs 1–10 in this order.
+ * Blurbs are ORCHARD UI copy only — they are not backend data.
+ * Images are the local placeholder photos in public/images/ (generic
+ * photos, not brand packshots), mapped by category name.
+ */
 
-export const PRODUCT_IMAGES: Record<string, string> = {
+export interface RealCategory {
+  id: number
+  name: string
+  blurb: string
+  image: string
+  accent: string
+}
+
+export const CATEGORIES: RealCategory[] = [
+  { id: 1, name: 'Fruits', blurb: 'Bright, sharp and sun-sweet.', image: '/images/category-fruits.jpg', accent: '#F47B35' },
+  { id: 2, name: 'Vegetables', blurb: 'The daily market staples.', image: '/images/category-vegetables.jpg', accent: '#547451' },
+  { id: 3, name: 'Dairy', blurb: 'Milk, butter and curd.', image: '/images/category-dairy.jpg', accent: '#F5D96B' },
+  { id: 4, name: 'Bakery', blurb: 'Breads and bakes for the table.', image: '/images/category-bakery.jpg', accent: '#F5D1BD' },
+  { id: 5, name: 'Beverages', blurb: 'Teas, coffees and cool drinks.', image: '/images/category-beverages.jpg', accent: '#F47B35' },
+  { id: 6, name: 'Pantry Staples', blurb: 'Rice, dal, oil and salt.', image: '/images/category-pantry-staples.jpg', accent: '#F5D96B' },
+  { id: 7, name: 'Snacks', blurb: 'Crisp things for tea-time.', image: '/images/category-snacks.jpg', accent: '#F47B35' },
+  { id: 8, name: 'Frozen Foods', blurb: 'From the freezer aisle.', image: '/images/category-frozen-foods.jpg', accent: '#547451' },
+  { id: 9, name: 'Personal Care', blurb: 'Everyday care essentials.', image: '/images/category-personal-care.jpg', accent: '#F5D1BD' },
+  { id: 10, name: 'Household Essentials', blurb: 'For the home, not the table.', image: '/images/category-household-essentials.jpg', accent: '#547451' },
+]
+
+export function categoryById(id: number): RealCategory | undefined {
+  return CATEGORIES.find((c) => c.id === id)
+}
+
+const CATEGORY_IMAGE: Record<number, string> = Object.fromEntries(
+  CATEGORIES.map((c) => [c.id, c.image]),
+) as Record<number, string>
+
+/**
+ * Frontend asset mapping: the backend sends NO image field, so ORCHARD
+ * maps the exact backend product name to a local placeholder photo.
+ * Unknown names fall back to their category photo, then the fruit photo.
+ * This is a documented frontend strategy, not backend data.
+ */
+const PRODUCT_IMAGES: Record<string, string> = {
   'Fresh Apples (1 kg)': '/images/fresh-apples.jpg',
   'Bananas (1 dozen)': '/images/bananas.jpg',
   'Alphonso Mangoes (1 kg)': '/images/alphonso-mangoes.jpg',
@@ -18,6 +57,7 @@ export const PRODUCT_IMAGES: Record<string, string> = {
   'Amul Cheese Slices (200 g)': '/images/amul-cheese-slices.jpg',
   'Plain Curd (400 g)': '/images/plain-curd.jpg',
   'Paneer (200 g)': '/images/paneer.jpg',
+  'Whole Wheat Bread (400 g)': '/images/whole-wheat-bread.jpg',
   'Burger Buns (4 pieces)': '/images/burger-buns.jpg',
   'Chocolate Muffins (2 pieces)': '/images/chocolate-muffins.jpg',
   'Rusk Toast (200 g)': '/images/rusk-toast.jpg',
@@ -54,19 +94,6 @@ export const PRODUCT_IMAGES: Record<string, string> = {
   'Garbage Bags (medium pack)': '/images/garbage-bags.jpg',
 }
 
-export function imageForProduct(name: string, category: string): string | null {
-  return PRODUCT_IMAGES[name] ?? CATEGORY_IMAGES[category] ?? null
-}
-
-export const CATEGORY_IMAGES: Record<string, string> = {
-  'Fruits': '/images/category-fruits.jpg',
-  'Vegetables': '/images/category-vegetables.jpg',
-  'Dairy': '/images/category-dairy.jpg',
-  'Bakery': '/images/category-bakery.jpg',
-  'Beverages': '/images/category-beverages.jpg',
-  'Pantry Staples': '/images/category-pantry-staples.jpg',
-  'Snacks': '/images/category-snacks.jpg',
-  'Frozen Foods': '/images/category-frozen-foods.jpg',
-  'Personal Care': '/images/category-personal-care.jpg',
-  'Household Essentials': '/images/category-household-essentials.jpg',
+export function imageForProduct(name: string, categoryId: number): string {
+  return PRODUCT_IMAGES[name] ?? CATEGORY_IMAGE[categoryId] ?? '/images/category-fruits.jpg'
 }

@@ -1,0 +1,6 @@
+# SPA fallback only. Real static assets are served before this redirect
+# (force defaults to false). No secrets, no API keys, no backend URLs here.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
