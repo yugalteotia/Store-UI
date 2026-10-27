@@ -7,7 +7,10 @@ import { categoryById } from '../api/categories'
 import { useApp } from '../state/AppContext'
 
 export function ProductCard({ product }: { product: Product }) {
-  const { addToCart, cartBusy } = useApp()
+  // Deliberately NOT disabled while a background sync is in flight:
+  // addToCart is optimistic, so the user can keep shopping instantly.
+  // A failed sync surfaces via cartError (Header banner / Cart page).
+  const { addToCart } = useApp()
   const [error, setError] = useState<string | null>(null)
   const cat = categoryById(product.categoryId)
   return (
@@ -33,7 +36,6 @@ export function ProductCard({ product }: { product: Product }) {
           </p>
           <button
             type="button"
-            disabled={cartBusy}
             onClick={async () => {
               setError(null)
               try {
