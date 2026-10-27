@@ -16,7 +16,7 @@ export function Footer() {
           <p className="font-serif text-2xl font-bold">ORCHARD</p>
           <p className="mt-2 text-sm text-cream/70">A little closer to the good stuff.</p>
           <p className="mt-4 text-xs text-cream/50">
-            A fictional Phase 1 prototype. No real orders, payments or deliveries are created here.
+            Connected to the real Store REST API. Orders and payments go through the backend; this newsletter form is local only.
           </p>
         </div>
         <nav aria-label="Footer">
@@ -26,14 +26,14 @@ export function Footer() {
             <li><Link to="/shop" className="hover:underline">Shop the market</Link></li>
             <li><Link to="/cart" className="hover:underline">Basket</Link></li>
             <li><Link to="/account" className="hover:underline">Account</Link></li>
-            <li><Link to="/manage" className="hover:underline">Manage (demo workspace)</Link></li>
+            <li><Link to="/manage" className="hover:underline">Manage</Link></li>
           </ul>
         </nav>
         <div>
           <p className="text-sm font-semibold">Market notes</p>
           <p className="mt-2 text-sm text-cream/70">A short note now and then. This form works locally only — nothing is sent.</p>
           {done ? (
-            <p role="status" className="mt-3 rounded-xl bg-leaf px-4 py-3 text-sm">Thanks — noted locally in this demo. No email was sent.</p>
+            <p role="status" className="mt-3 rounded-xl bg-leaf px-4 py-3 text-sm">Thanks — noted locally. No email was sent.</p>
           ) : (
             <form onSubmit={submit} className="mt-3 flex gap-2">
               <label htmlFor="newsletter-email" className="sr-only">Email for market notes</label>
@@ -52,7 +52,7 @@ export function Footer() {
         </div>
       </div>
       <p className="border-t border-white/10 py-4 text-center text-xs text-cream/50">
-        ORCHARD — The Living Market · Phase 1 mock prototype · Photos are generic placeholders, not brand packshots.
+        ORCHARD — The Living Market · Photos are generic placeholders, not brand packshots.
       </p>
     </footer>
   )

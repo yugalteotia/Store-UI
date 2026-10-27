@@ -19,6 +19,7 @@ Generic placeholder photos for prototyping, not brand packshots — to be replac
 - `amul-cheese-slices.jpg` — Amul Cheese Slices (200 g) — source: https://priceofmeat.com/35466/cheese-slices/
 - `plain-curd.jpg` — Plain Curd (400 g) — source: https://tv9punjabi.com/web-stories/health-curd-best-combination-with-salt-and-sugar
 - `paneer.jpg` — Paneer (200 g) — source: (page URL not returned by image search; direct media URL: http://cdn.shopaccino.com/refresh/products/paneerthumbnai-1797625513817083_l.jpeg)
+- `whole-wheat-bread.jpg` — Whole Wheat Bread (400 g) — source: https://www.bakingkneads.com/how-to-make-whole-wheat-bread-fluffy/ (sliced whole wheat bread photo, converted from WebP to JPEG)
 - `burger-buns.jpg` — Burger Buns (4 pieces) — source: https://krollskornera.pages.dev/posts/homemade-hamburger-buns/
 - `chocolate-muffins.jpg` — Chocolate Muffins (2 pieces) — source: http://cakesbymk.com/recipe/the-best-chocolate-muffins/
 - `rusk-toast.jpg` — Rusk Toast (200 g) — source: https://www.Vecteezy.com/free-photos/rusk-bread

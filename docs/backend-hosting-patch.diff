@@ -1,0 +1,71 @@
+diff --git a/src/main/java/com/yugal/store/auth/SecurityConfig.java b/src/main/java/com/yugal/store/auth/SecurityConfig.java
+index a37beb5..c66477a 100644
+--- a/src/main/java/com/yugal/store/auth/SecurityConfig.java
++++ b/src/main/java/com/yugal/store/auth/SecurityConfig.java
+@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+ import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+ import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
++import org.springframework.security.config.Customizer;
+ import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+ import org.springframework.security.config.http.SessionCreationPolicy;
+ import org.springframework.security.core.userdetails.UserDetailsService;
+@@ -51,6 +52,7 @@ public class SecurityConfig {
+     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+         http
+                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
++                .cors(Customizer.withDefaults())
+                 .csrf(AbstractHttpConfigurer::disable)
+                 .authorizeHttpRequests(auth -> {
+                     featureSecurityRules.forEach(rule -> rule.configure(auth));
+diff --git a/src/main/java/com/yugal/store/commons/CorsConfig.java b/src/main/java/com/yugal/store/commons/CorsConfig.java
+new file mode 100644
+index 0000000..956b420
+--- /dev/null
++++ b/src/main/java/com/yugal/store/commons/CorsConfig.java
+@@ -0,0 +1,33 @@
++package com.yugal.store.commons;
++
++import java.util.List;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.web.cors.CorsConfiguration;
++import org.springframework.web.cors.CorsConfigurationSource;
++import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
++
++/**
++ * CORS for the hosted ORCHARD frontend ONLY.
++ * Replace <FRONTEND_ORIGIN> with the exact deployed frontend origin,
++ * e.g. https://orchard.example.com - no trailing slash, no path, no "*".
++ * Never use "*" here: Spring rejects "*" together with
++ * allowCredentials=true, and a wildcard with credentials would let any
++ * site make credentialed requests to the API.
++ */
++@Configuration
++public class CorsConfig {
++
++    @Bean
++    public CorsConfigurationSource corsConfigurationSource() {
++        var config = new CorsConfiguration();
++        config.setAllowedOrigins(List.of("<FRONTEND_ORIGIN>"));
++        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
++        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
++        config.setAllowCredentials(true);
++        config.setMaxAge(3600L);
++        var source = new UrlBasedCorsConfigurationSource();
++        source.registerCorsConfiguration("/**", config);
++        return source;
++    }
++}
+diff --git a/src/main/resources/application-prod.yaml b/src/main/resources/application-prod.yaml
+index 119b0b0..c59f9af 100644
+--- a/src/main/resources/application-prod.yaml
++++ b/src/main/resources/application-prod.yaml
+@@ -4,4 +4,4 @@ spring:
+ server:
+   port: ${PORT:8080}
+   address: 0.0.0.0
+-websiteUrl: https://store-rest-api.hostless.app
+\ No newline at end of file
++websiteUrl: <FRONTEND_ORIGIN>
+\ No newline at end of file

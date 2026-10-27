@@ -57,6 +57,7 @@ const PRODUCT_IMAGES: Record<string, string> = {
   'Amul Cheese Slices (200 g)': '/images/amul-cheese-slices.jpg',
   'Plain Curd (400 g)': '/images/plain-curd.jpg',
   'Paneer (200 g)': '/images/paneer.jpg',
+  'Whole Wheat Bread (400 g)': '/images/whole-wheat-bread.jpg',
   'Burger Buns (4 pieces)': '/images/burger-buns.jpg',
   'Chocolate Muffins (2 pieces)': '/images/chocolate-muffins.jpg',
   'Rusk Toast (200 g)': '/images/rusk-toast.jpg',
@@ -91,8 +92,6 @@ const PRODUCT_IMAGES: Record<string, string> = {
   'Harpic Toilet Cleaner (500 ml)': '/images/harpic-toilet-cleaner.jpg',
   'Scotch-Brite Scrub Pad (pack of 3)': '/images/scotch-brite-scrub-pad.jpg',
   'Garbage Bags (medium pack)': '/images/garbage-bags.jpg',
-  // 'Whole Wheat Bread (400 g)' has no verified photo: it intentionally
-  // falls back to its category (Bakery) photo below.
 }
 
 export function imageForProduct(name: string, categoryId: number): string {
