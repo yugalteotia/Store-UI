@@ -40,7 +40,10 @@ export function Header() {
           <NavLink to="/account" className={linkCls}>Account</NavLink>
         </nav>
 
-        <form onSubmit={submitSearch} role="search" className="ml-auto flex min-w-0 flex-1 items-center gap-2 md:max-w-xs">
+        {/* Below lg the search gets its own full-width row so it is never
+            crushed between the fixed-width header buttons; at lg+ it sits
+            inline in the header row as before. */}
+        <form onSubmit={submitSearch} role="search" className="order-3 flex w-full items-center gap-2 lg:order-none lg:ml-auto lg:min-w-0 lg:flex-1 lg:max-w-xs">
           <label htmlFor="header-search" className="sr-only">Search products</label>
           <input
             id="header-search"
