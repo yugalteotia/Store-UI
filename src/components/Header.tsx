@@ -4,7 +4,7 @@ import { ShoppingBasket, Leaf, Menu, Moon, Search, Sun, User, X } from 'lucide-r
 import { useApp } from '../state/AppContext'
 
 export function Header() {
-  const { cartCount, justAdded, session, theme, setTheme, isAdminHint } = useApp()
+  const { cartCount, justAdded, session, theme, setTheme, isAdminHint, cartError } = useApp()
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
   const navigate = useNavigate()
@@ -75,6 +75,11 @@ export function Header() {
           {open ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
         </button>
       </div>
+      {cartError && (
+        <div role="alert" className="border-t border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+          Basket update failed: {cartError} — <Link to="/cart" className="font-semibold underline">check your basket</Link>
+        </div>
+      )}
       {open && (
         <nav aria-label="Mobile" className="flex flex-col gap-1 px-4 pb-4 md:hidden">
           <NavLink to="/" end onClick={() => setOpen(false)} className={linkCls}>Home</NavLink>

@@ -97,7 +97,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [cartTotal, setCartTotal] = useState(0)
   const [cartStatus, setCartStatus] = useState<LoadStatus>('loading')
   const [cartError, setCartError] = useState<string | null>(null)
-  const [cartBusy, setCartBusy] = useState(false)
+  // cartBusy is retained for API compatibility but is always false now:
+  // cart actions are optimistic and never block the UI while syncing.
+  const cartBusy = false
   const [orders, setOrders] = useState<RealOrder[]>([])
   const [ordersStatus, setOrdersStatus] = useState<LoadStatus>('loading')
   const [ordersError, setOrdersError] = useState<string | null>(null)
@@ -114,6 +116,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
     () => (typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false),
   )
   const cartIdRef = useRef<string | null>(loadCartId())
+  // Refs mirroring state, so optimistic updates + queued background syncs
+  // never read a stale closure. The UI updates instantly from these refs;
+  // the server sync runs in the background, in click order.
+  const cartRef = useRef<CartLine[]>([])
+  const productsRef = useRef<Product[]>([])
+  const cartTotalRef = useRef(0)
+  const syncQueueRef = useRef<Promise<void>>(Promise.resolve())
+  useEffect(() => { cartRef.current = cart }, [cart])
+  useEffect(() => { productsRef.current = products }, [products])
+  useEffect(() => { cartTotalRef.current = cartTotal }, [cartTotal])
+
+  const optimisticTotal = useCallback((lines: CartLine[]) => {
+    return lines.reduce((sum, l) => {
+      const p = productsRef.current.find((x) => x.id === l.productId)
+      return sum + (p ? p.price * l.quantity : 0)
+    }, 0)
+  }, [])
+
+  const applyOptimistic = useCallback((lines: CartLine[]) => {
+    cartRef.current = lines
+    setCart(lines)
+    const total = optimisticTotal(lines)
+    cartTotalRef.current = total
+    setCartTotal(total)
+    setCartError(null)
+  }, [optimisticTotal])
+
+  const enqueueSync = useCallback((fn: () => Promise<void>) => {
+    // Serialize server mutations in click order, but never block the UI:
+    // callers return immediately after the optimistic update.
+    syncQueueRef.current = syncQueueRef.current.then(fn, fn).catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return
@@ -246,72 +280,111 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addToCart = useCallback(
     async (productId: number, qty = 1) => {
-      setCartBusy(true)
-      try {
-        const cartId = await ensureCartId()
-        const existing = cart.find((l) => l.productId === productId)
-        const target = Math.min(MAX_QTY, (existing?.quantity ?? 0) + Math.max(1, qty))
-        if (existing) {
-          await updateCartItem(cartId, productId, target)
-        } else {
-          await addCartItem(cartId, productId)
-          if (target > 1) await updateCartItem(cartId, productId, target)
+      // Optimistic: the basket count / total update NOW, no waiting for
+      // the backend round-trip(s). The old code awaited add + GET cart
+      // and disabled every Add button (cartBusy) meanwhile — that wait
+      // is what made adding feel slow on a hosted backend.
+      const prevLines = cartRef.current
+      const prevTotal = cartTotalRef.current
+      const existing = prevLines.find((l) => l.productId === productId)
+      const target = Math.min(MAX_QTY, (existing?.quantity ?? 0) + Math.max(1, qty))
+      const nextLines = existing
+        ? prevLines.map((l) => (l.productId === productId ? { ...l, quantity: target } : l))
+        : [...prevLines, { productId, quantity: target }]
+      applyOptimistic(nextLines)
+      setJustAdded((n) => n + 1)
+      // Background sync, in click order. No GET /carts after the mutation:
+      // the optimistic total (from the already-loaded catalogue prices)
+      // is the display total; the server total is authoritative at
+      // checkout, and a manual refreshCart() still re-reads it.
+      // On failure, roll back to the pre-click state and surface cartError.
+      enqueueSync(async () => {
+        try {
+          const cartId = await ensureCartId()
+          if (existing) {
+            await updateCartItem(cartId, productId, target)
+          } else {
+            await addCartItem(cartId, productId)
+            if (target > 1) await updateCartItem(cartId, productId, target)
+          }
+        } catch (err) {
+          cartRef.current = prevLines
+          setCart(prevLines)
+          cartTotalRef.current = prevTotal
+          setCartTotal(prevTotal)
+          setCartError(err instanceof ApiError ? err.message : 'Could not add to basket.')
         }
-        await refreshCart()
-        setJustAdded((n) => n + 1)
-      } finally {
-        setCartBusy(false)
-      }
+      })
     },
-    [cart, ensureCartId, refreshCart],
+    [applyOptimistic, enqueueSync, ensureCartId],
   )
 
   const setCartQuantity = useCallback(
     async (productId: number, qty: number) => {
+      const prevLines = cartRef.current
+      const prevTotal = cartTotalRef.current
+      const nextLines = qty <= 0
+        ? prevLines.filter((l) => l.productId !== productId)
+        : prevLines.map((l) => (l.productId === productId ? { ...l, quantity: Math.min(MAX_QTY, qty) } : l))
+      applyOptimistic(nextLines)
       const cartId = cartIdRef.current
       if (!cartId) return
-      setCartBusy(true)
-      try {
-        if (qty <= 0) await removeCartItem(cartId, productId)
-        else await updateCartItem(cartId, productId, Math.min(MAX_QTY, qty))
-        await refreshCart()
-      } finally {
-        setCartBusy(false)
-      }
+      enqueueSync(async () => {
+        try {
+          if (qty <= 0) await removeCartItem(cartId, productId)
+          else await updateCartItem(cartId, productId, Math.min(MAX_QTY, qty))
+        } catch (err) {
+          cartRef.current = prevLines
+          setCart(prevLines)
+          cartTotalRef.current = prevTotal
+          setCartTotal(prevTotal)
+          setCartError(err instanceof ApiError ? err.message : 'Could not update basket.')
+        }
+      })
     },
-    [refreshCart],
+    [applyOptimistic, enqueueSync],
   )
 
   const removeFromCart = useCallback(
     async (productId: number) => {
+      const prevLines = cartRef.current
+      const prevTotal = cartTotalRef.current
+      applyOptimistic(prevLines.filter((l) => l.productId !== productId))
       const cartId = cartIdRef.current
       if (!cartId) return
-      setCartBusy(true)
-      try {
-        await removeCartItem(cartId, productId)
-        await refreshCart()
-      } finally {
-        setCartBusy(false)
-      }
+      enqueueSync(async () => {
+        try {
+          await removeCartItem(cartId, productId)
+        } catch (err) {
+          cartRef.current = prevLines
+          setCart(prevLines)
+          cartTotalRef.current = prevTotal
+          setCartTotal(prevTotal)
+          setCartError(err instanceof ApiError ? err.message : 'Could not remove from basket.')
+        }
+      })
     },
-    [refreshCart],
+    [applyOptimistic, enqueueSync],
   )
 
   const clearCart = useCallback(async () => {
+    const prevLines = cartRef.current
+    const prevTotal = cartTotalRef.current
+    applyOptimistic([])
     const cartId = cartIdRef.current
-    if (!cartId) {
-      setCart([])
-      setCartTotal(0)
-      return
-    }
-    setCartBusy(true)
-    try {
-      await clearCartItems(cartId)
-      await refreshCart()
-    } finally {
-      setCartBusy(false)
-    }
-  }, [refreshCart])
+    if (!cartId) return
+    enqueueSync(async () => {
+      try {
+        await clearCartItems(cartId)
+      } catch (err) {
+        cartRef.current = prevLines
+        setCart(prevLines)
+        cartTotalRef.current = prevTotal
+        setCartTotal(prevTotal)
+        setCartError(err instanceof ApiError ? err.message : 'Could not clear basket.')
+      }
+    })
+  }, [applyOptimistic, enqueueSync])
 
   const login = useCallback(async (email: string, password: string) => {
     const user = await apiLogin(email, password)
