@@ -57,6 +57,15 @@ export async function login(email: string, password: string): Promise<RealUser> 
   return getMe()
 }
 
+// Server-side logout: asks the backend to clear the refresh-token cookie.
+// The cookie is HttpOnly, so the frontend CANNOT delete it itself — only
+// the backend (Set-Cookie with Max-Age=0) can. Requires the backend to
+// expose POST /auth/logout; callers must still clear local state even if
+// this throws (e.g. endpoint not deployed yet).
+export async function logout(): Promise<void> {
+  await apiRequest<unknown>('/auth/logout', { method: 'POST' })
+}
+
 /** POST /users is the registration endpoint (there is NO /auth/register).
  *  It returns 201 + UserDto and NO token, so callers log in afterwards. */
 export async function registerUser(name: string, email: string, password: string): Promise<UserDto> {

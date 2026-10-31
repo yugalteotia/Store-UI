@@ -24,7 +24,7 @@ paise). No endpoint in this matrix paginates or sorts.
 | `POST /auth/login` | Public | `{email, password}` — email `@Email`, both `@NotBlank` | 200 `{token}` (access token); sets HttpOnly `Secure` cookie `refreshToken`, path `/auth/refresh`, max-age 604800 (7 days) | 400 validation map; 401 empty body on bad credentials (`AuthController` handler) | Yes (no side effect) |
 | `POST /auth/refresh` | Public | Cookie `refreshToken` (no body) | 200 `{token}` | 400 if cookie missing (Spring: missing `@CookieValue`); 401 if token invalid/expired (`BadCredentialsException` → 401 handler) | Yes |
 | `GET /auth/me` | Auth | — | 200 `{id, name, email}` | 401 no/invalid token; 404 if the token's user no longer exists. **No role field.** | Yes |
-| `POST /auth/logout` | — | — | **DOES NOT EXIST** | Frontend logout = clear client state only. | — |
+| `POST /auth/logout` | — | 204, clears `refreshToken` cookie | **Required from backend** | Frontend calls it in `logout()`; without it the cookie survives and the next load re-logs the user in. | — |
 
 Token facts: access 900 s, refresh 604800 s (`application.yaml`).
 JWT claims: `sub` = user id, `email`, `name`, `role`. The frontend
@@ -122,6 +122,6 @@ DTO: `{id, status, createdAt, items: [{product: {id, name, price}, quantity, tot
 - No user-profile fields beyond name/email; no phone, city or avatar.
 - No order status beyond the payment status; no tracking, no delivery
   estimate, no cancellation endpoint for customers.
-- No refresh-token rotation, revocation or logout.
+- No refresh-token rotation or server-side revocation. Logout = cookie clear via `POST /auth/logout` (backend clears the HttpOnly cookie).
 - No CORS configuration (verified by grep: no `Cors*`/`allowedOrigins`
   in the backend source).
