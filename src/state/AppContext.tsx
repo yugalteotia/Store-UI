@@ -22,6 +22,7 @@ import {
   listOrders,
   listProducts,
   login as apiLogin,
+  logout as apiLogout,
   probeAdmin,
   registerUser,
   removeCartItem,
@@ -61,7 +62,7 @@ interface AppState {
   refreshCart: () => Promise<void>
   login: (email: string, password: string) => Promise<RealUser>
   register: (name: string, email: string, password: string) => Promise<RealUser>
-  logout: () => void
+  logout: () => Promise<void>
   setSessionUser: (user: RealUser | null) => void
   setTheme: (t: ThemePreference) => void
 }
@@ -400,12 +401,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return login(email, password)
   }, [login])
 
-  const logout = useCallback(() => {
-    // No backend logout endpoint exists: clearing client state is the
-    // whole logout. The refresh cookie remains until it expires, but it
-    // is HttpOnly and cannot be read or reused by this page's JS — and
-    // session restore on the next visit would sign the user back in.
-    // That cookie-lifetime caveat is documented in the integration plan.
+  const logout = useCallback(async () => {
+    // Ask the backend to clear the refresh-token cookie FIRST: the cookie
+    // is HttpOnly, so JS cannot delete it — only the backend can, via
+    // POST /auth/logout. Without that endpoint, the next page load's
+    // POST /auth/refresh silently signs the same user back in.
+    // Local state is cleared regardless, so logout always works from the
+    // user's point of view even if the backend isn't updated yet.
+    try {
+      await apiLogout()
+    } catch {
+      // Backend without the logout endpoint yet: cookie stays, but the
+      // local session is still dropped. Warn once so it isn't silent.
+      console.warn('[orchard] POST /auth/logout failed; refresh cookie may still be set.')
+    }
     clearSessionToken()
     setSession(null)
     setIsAdminHint(false)
