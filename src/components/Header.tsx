@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ShoppingBasket, Leaf, Menu, Moon, Search, Sun, User, X } from 'lucide-react'
+import { ShoppingBasket, Leaf, Menu, Monitor, Moon, Search, Sun, User, X } from 'lucide-react'
 import { useApp } from '../state/AppContext'
 
 export function Header() {
@@ -58,7 +58,7 @@ export function Header() {
         </form>
 
         <button type="button" onClick={cycleTheme} aria-label={`Theme: ${theme}. Switch theme`} className="rounded-full border border-plum/20 p-2 text-plum dark:border-white/20 dark:text-cream" title={`Theme: ${theme}`}>
-          {theme === 'dark' ? <Moon size={18} aria-hidden /> : <Sun size={18} aria-hidden />}
+          {theme === 'dark' ? <Moon size={18} aria-hidden /> : theme === 'system' ? <Monitor size={18} aria-hidden /> : <Sun size={18} aria-hidden />}
         </button>
 
         <Link to={session ? '/account' : '/login'} aria-label="Account" className="flex items-center gap-1 rounded-full border border-plum/20 px-3 py-2 text-sm text-plum dark:border-white/20 dark:text-cream">
