@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,12 +32,24 @@ function nextPath(params: URLSearchParams): string {
   return next && next.startsWith('/') && !next.startsWith('//') ? next : '/account'
 }
 
+// Keeps ?next= when hopping between sign-in and sign-up so a guest headed
+// for checkout never loses their destination by picking the other form.
+function nextQuery(params: URLSearchParams): string {
+  const next = params.get('next')
+  return next ? `?next=${encodeURIComponent(next)}` : ''
+}
+
 export function Login() {
-  const { login, session } = useApp()
+  const { login, session, sessionStatus } = useApp()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const [msg, setMsg] = useState('')
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
+  // Already signed in (e.g. back-button after login): skip the form and go
+  // where they were headed instead of showing a dead page.
+  useEffect(() => {
+    if (sessionStatus === 'ready' && session) navigate(nextPath(params), { replace: true })
+  }, [session, sessionStatus, navigate, params])
   const onSubmit = async (data: LoginForm) => {
     setMsg('')
     try {
@@ -70,22 +82,26 @@ export function Login() {
         <PasswordField id="login-password" label="Password" error={errors.password?.message} register={register} />
         {msg && <p role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-700 dark:bg-white/5 dark:text-red-300">{msg}</p>}
         <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-plum py-3 font-semibold text-cream disabled:opacity-50">Sign in</button>
-        <p className="text-center text-sm">New here? <Link to="/register" className="font-semibold text-citrusdark underline">Create an account</Link></p>
+        <p className="text-center text-sm">New here? <Link to={`/register${nextQuery(params)}`} className="font-semibold text-citrusdark underline">Create an account</Link></p>
       </form>
     </main>
   )
 }
 
 export function Register() {
-  const { register: registerAccount } = useApp()
+  const { register: registerAccount, session, sessionStatus } = useApp()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const [msg, setMsg] = useState('')
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) })
+  useEffect(() => {
+    if (sessionStatus === 'ready' && session) navigate(nextPath(params), { replace: true })
+  }, [session, sessionStatus, navigate, params])
   const onSubmit = async (data: RegisterForm) => {
     setMsg('')
     try {
       await registerAccount(data.name, data.email, data.password)
-      navigate('/account')
+      navigate(nextPath(params))
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors.email) {
         setMsg(err.fieldErrors.email)
@@ -118,7 +134,7 @@ export function Register() {
         <PasswordField id="reg-password" label="Password (6–25 characters)" error={errors.password?.message} register={register} />
         {msg && <p role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-700 dark:bg-white/5 dark:text-red-300">{msg}</p>}
         <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-plum py-3 font-semibold text-cream disabled:opacity-50">Create account</button>
-        <p className="text-center text-sm">Already have an account? <Link to="/login" className="font-semibold text-citrusdark underline">Sign in</Link></p>
+        <p className="text-center text-sm">Already have an account? <Link to={`/login${nextQuery(params)}`} className="font-semibold text-citrusdark underline">Sign in</Link></p>
       </form>
     </main>
   )

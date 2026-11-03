@@ -15,7 +15,7 @@ function loadCartId(): string | null {
 }
 
 export function Checkout() {
-  const { cart, products, cartSubtotal, session, sessionStatus, setLastCheckoutOrderId, refreshCart } = useApp()
+  const { cart, products, cartSubtotal, setLastCheckoutOrderId, refreshCart } = useApp()
   const [error, setError] = useState('')
   const [uncertain, setUncertain] = useState(false)
   const [pending, setPending] = useState(false)
@@ -76,13 +76,12 @@ export function Checkout() {
         returning from Stripe does not by itself prove payment.
       </p>
 
-      {sessionStatus === 'ready' && !session && (
-        <div role="alert" className="mt-4 rounded-2xl bg-paper p-5 dark:bg-white/5">
-          <p className="font-semibold">Sign in to check out.</p>
-          <p className="mt-1 text-sm text-plum/60 dark:text-cream/60">Checkout requires an account on the backend. Your basket is kept — it is not linked to your account, so it stays exactly as it is after you sign in.</p>
-          <Link to="/login?next=/checkout" className="mt-3 inline-block rounded-full bg-plum px-6 py-3 font-semibold text-cream">Sign in</Link>
-        </div>
-      )}
+      {/*
+        Guests never reach this page: the /checkout route redirects them to
+        /login?next=/checkout, and they return here after signing in. The
+        button below therefore stays enabled — an important action must never
+        look broken just because a step (sign-in) comes first.
+      */}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section className="rounded-3xl bg-paper p-6 shadow-card dark:bg-white/5" aria-label="What happens next">
@@ -99,7 +98,7 @@ export function Checkout() {
           )}
           <button
             type="button"
-            disabled={pending || !session}
+            disabled={pending}
             onClick={() => void startCheckout()}
             className="mt-6 w-full rounded-full bg-citrus py-3 font-semibold text-white hover:bg-citrusdark disabled:opacity-50"
           >
