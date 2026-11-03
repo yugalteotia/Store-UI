@@ -1,5 +1,6 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
-import { AppProvider } from './state/AppContext'
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import type { ReactNode } from 'react'
+import { AppProvider, useApp } from './state/AppContext'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -30,6 +31,27 @@ export function NotFound() {
   )
 }
 
+// Guests may fill a basket, but checkout requires an account: send them to
+// sign in (remembering where they were headed) instead of showing a dead end.
+// Waits for the session restore so a slow refresh never bounces a signed-in
+// user to the login page by mistake.
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { session, sessionStatus } = useApp()
+  const location = useLocation()
+  if (sessionStatus !== 'ready') {
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <p role="status" className="text-plum/60 dark:text-cream/60">Loading…</p>
+      </main>
+    )
+  }
+  if (!session) {
+    const next = encodeURIComponent(location.pathname + location.search)
+    return <Navigate to={`/login?next=${next}`} replace />
+  }
+  return <>{children}</>
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -43,7 +65,7 @@ export default function App() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/products/:productId" element={<ProductDetail />} />
                 <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
                 <Route path="/checkout/result" element={<CheckoutResult />} />
                 <Route path="/checkout-success" element={<CheckoutSuccess />} />
                 <Route path="/checkout-cancel" element={<CheckoutCancel />} />
