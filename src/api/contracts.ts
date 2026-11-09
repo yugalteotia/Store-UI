@@ -1,6 +1,6 @@
 /**
  * Backend transport DTOs, verified against the Store REST API source
- * (see docs/api-contract-matrix.md). These shapes are the wire format —
+ * (see docs/api-contract-matrix.md). These shapes are the wire format -
  * they are NOT the view models used by components. Mapping lives in
  * mapping.ts. Nothing here is invented: fields the backend does not send
  * (images, units, stock, ratings, categories list) simply do not appear.
@@ -51,7 +51,7 @@ export interface OrderDto {
 }
 
 /** /auth/me and /users return only these three fields. There is NO role
- *  field in UserDto — the frontend cannot learn a role from identity. */
+ *  field in UserDto - the frontend cannot learn a role from identity. */
 export interface UserDto {
   id: number
   name: string
@@ -69,7 +69,7 @@ export interface CheckoutResponseDto {
 
 /** Parse a backend decimal (number or string) into a JS number, or null
  *  when it is not a finite number. Never silently substitutes 0 for a
- *  malformed price — callers decide how to surface it. */
+ *  malformed price - callers decide how to surface it. */
 export function parsePrice(value: number | string | null | undefined): number | null {
   if (value === null || value === undefined) return null
   const n = typeof value === 'string' ? Number(value) : value

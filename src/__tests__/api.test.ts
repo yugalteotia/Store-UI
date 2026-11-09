@@ -184,7 +184,7 @@ describe('services use the verified contracts', () => {
     expect(new Headers(calls[1].init?.headers).get('Authorization')).toBe('Bearer abc')
   })
 
-  it('registration posts to /users — there is no /auth/register', async () => {
+  it('registration posts to /users - there is no /auth/register', async () => {
     const { calls } = mockFetchSequence([jsonResponse(201, { id: 6, name: 'Asha', email: 'asha@example.com' })])
     await registerUser('Asha', 'asha@example.com', 'secret1')
     expect(calls[0].url).toBe('/users')

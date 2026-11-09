@@ -33,7 +33,7 @@ export function Checkout() {
     try {
       const result = await checkout(cartId)
       if (!isValidStripeCheckoutUrl(result.checkoutUrl)) {
-        setError('The server returned a checkout address that is not a Stripe address. Nothing was opened — this is a safety stop, not a payment.')
+        setError('The server returned a checkout address that is not a Stripe address. Nothing was opened - this is a safety stop, not a payment.')
         setPending(false)
         return
       }
@@ -47,9 +47,9 @@ export function Checkout() {
       if (err instanceof ApiError && err.kind === 'network') {
         // A timeout here is genuinely uncertain: the order may exist.
         setUncertain(true)
-        setError('The checkout request did not complete cleanly. The order may already exist — check your orders before trying again.')
+        setError('The checkout request did not complete cleanly. The order may already exist - check your orders before trying again.')
       } else if (err instanceof ApiError && err.kind === 'auth') {
-        setError('Please sign in to check out — checkout requires an account.')
+        setError('Please sign in to check out - checkout requires an account.')
       } else {
         setError(err instanceof Error ? err.message : 'Checkout failed.')
       }
@@ -72,14 +72,14 @@ export function Checkout() {
       <p role="note" className="mt-3 rounded-2xl bg-butter/70 px-4 py-3 text-sm font-semibold text-plum">
         Real checkout, via the Store API: this creates a PENDING order, clears your basket on the
         server, and takes you to Stripe&apos;s hosted payment page. ORCHARD never asks for, sees or
-        stores card details. Payment is only confirmed by Stripe&apos;s server-to-server webhook —
+        stores card details. Payment is only confirmed by Stripe&apos;s server-to-server webhook -
         returning from Stripe does not by itself prove payment.
       </p>
 
       {/*
         Guests never reach this page: the /checkout route redirects them to
         /login?next=/checkout, and they return here after signing in. The
-        button below therefore stays enabled — an important action must never
+        button below therefore stays enabled - an important action must never
         look broken just because a step (sign-in) comes first.
       */}
 
@@ -88,9 +88,9 @@ export function Checkout() {
           <h2 className="font-serif text-2xl font-bold">What happens next</h2>
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-plum/80 dark:text-cream/80">
             <li>You confirm below. The server creates your order (PENDING) and clears this basket.</li>
-            <li>You pay on Stripe&apos;s hosted page — card details go to Stripe, not to ORCHARD.</li>
+            <li>You pay on Stripe&apos;s hosted page - card details go to Stripe, not to ORCHARD.</li>
             <li>Stripe tells the server the result via webhook; your order becomes PAID or FAILED.</li>
-            <li>You return here and can check the real order status — never trust the return URL alone.</li>
+            <li>You return here and can check the real order status - never trust the return URL alone.</li>
           </ol>
           {error && <p role="alert" className="mt-4 text-sm text-red-700 dark:text-red-300">{error}</p>}
           {uncertain && (
@@ -104,7 +104,7 @@ export function Checkout() {
           >
             {pending ? 'Creating your Stripe checkout…' : 'Continue to secure Stripe checkout'}
           </button>
-          <p className="mt-2 text-xs text-plum/60 dark:text-cream/60">Only the basket total is sent to the server (via the basket id). ORCHARD never sends a price of its own — the server prices the order from its catalogue.</p>
+          <p className="mt-2 text-xs text-plum/60 dark:text-cream/60">Only the basket total is sent to the server (via the basket id). ORCHARD never sends a price of its own - the server prices the order from its catalogue.</p>
         </section>
 
         <section className="rounded-3xl bg-paper p-6 shadow-card dark:bg-white/5" aria-label="Basket summary">

@@ -11,7 +11,7 @@ export function Home() {
   const { products, productsStatus, productsError, reloadProducts } = useApp()
   const heroRef = useRef<HTMLDivElement>(null)
   // The backend has no featured/seasonal flags, so these are display
-  // choices over catalogue order — never presented as backend data.
+  // choices over catalogue order - never presented as backend data.
   const featured = products.slice(0, 8)
   const seasonal = products.filter((p) => p.categoryId === 1).slice(0, 3)
   const popular = products.slice(0, 8)
@@ -41,7 +41,7 @@ export function Home() {
           </h1>
           <p className="hero-copy mt-5 max-w-xl text-lg text-plum/70 dark:text-cream/70">
             Fresh fruit, everyday vegetables and market staples, chosen like a good stallholder
-            would — colourful, honest, and ready for tonight&apos;s cooking.
+            would - colourful, honest, and ready for tonight&apos;s cooking.
           </p>
           <div className="hero-copy mt-7 flex flex-wrap gap-3">
             <Link to="/shop" className="inline-flex items-center gap-2 rounded-full bg-plum px-6 py-3 font-semibold text-cream dark:bg-butter dark:text-plum">
@@ -63,7 +63,7 @@ export function Home() {
           <img src="/images/alphonso-mangoes.jpg" alt="Ripe Alphonso mangoes at a market stall" className="hero-img relative aspect-[4/5] w-full rounded-[2rem] object-cover shadow-lift" />
           <div className="hero-img absolute bottom-6 left-4 max-w-[240px] rounded-2xl bg-paper/95 p-4 shadow-lift dark:bg-plumdeep/95">
             <p className="flex items-center gap-2 text-sm font-semibold"><Leaf size={16} className="text-leaf" aria-hidden /> Today&apos;s market note</p>
-            <p className="mt-1 text-sm text-plum/70 dark:text-cream/70">Fruit, vegetables and staples, priced live from the Store API — pack sizes are in each product name.</p>
+            <p className="mt-1 text-sm text-plum/70 dark:text-cream/70">Fruit, vegetables and staples, priced live from the Store API - pack sizes are in each product name.</p>
           </div>
         </div>
       </section>
@@ -127,9 +127,9 @@ export function Home() {
               and a basket that never gets in the way of cooking plans.
             </p>
             <ul className="mt-6 space-y-2 text-plum/80 dark:text-cream/80">
-              <li>· Colour first — find things by looking, not by decoding labels.</li>
+              <li>· Colour first - find things by looking, not by decoding labels.</li>
               <li>· Prices in rupees; pack sizes are stated in each product name by the catalogue itself.</li>
-              <li>· No invented ratings, stock counts or delivery promises — the backend sends none.</li>
+              <li>· No invented ratings, stock counts or delivery promises - the backend sends none.</li>
             </ul>
           </div>
         </div>
@@ -139,7 +139,7 @@ export function Home() {
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <Reveal>
           <h2 className="font-serif text-3xl font-bold sm:text-4xl">Popular in the market</h2>
-          <p className="mt-2 text-plum/60 dark:text-cream/60">A slice of the live catalogue — the full list lives in Shop.</p>
+          <p className="mt-2 text-plum/60 dark:text-cream/60">A slice of the live catalogue - the full list lives in Shop.</p>
         </Reveal>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {popular.map((p) => <ProductCard key={p.id} product={p} />)}

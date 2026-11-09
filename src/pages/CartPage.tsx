@@ -62,7 +62,7 @@ export function CartPage() {
           <span>Subtotal</span>
           <strong>{formatINR(cartSubtotal)}</strong>
         </div>
-        <p className="mt-1 text-sm text-plum/60 dark:text-cream/60">Server total from the Store API — no delivery fee, tax or discount is applied by the backend.</p>
+        <p className="mt-1 text-sm text-plum/60 dark:text-cream/60">Server total from the Store API - no delivery fee, tax or discount is applied by the backend.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link to="/checkout" className="rounded-full bg-citrus px-8 py-3 font-semibold text-white hover:bg-citrusdark">Go to checkout</Link>
           {!confirmClear ? (

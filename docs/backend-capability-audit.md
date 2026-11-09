@@ -1,4 +1,4 @@
-# Backend Capability Audit — Store REST API (Phase 1, read-only)
+# Backend Capability Audit - Store REST API (Phase 1, read-only)
 
 Source inspected: a fresh read-only clone of https://github.com/yugalteotia/Store-REST-API
 (cloned to `/tmp/orchard-audit`, never edited). Backend files were **not** modified, and
@@ -6,7 +6,7 @@ Phase 1 of ORCHARD does **not** connect to this backend at all. This audit exist
 future Phase 2 integration is designed against verified behaviour, not assumptions.
 
 Stack (from `pom.xml`): Spring Boot 4.1.1, Java 17 (`java.version` 17; the README mentions
-Java 26 — treat the pom as authoritative for the build), MySQL + Flyway, Spring Security + JWT
+Java 26 - treat the pom as authoritative for the build), MySQL + Flyway, Spring Security + JWT
 (jjwt), Stripe Java SDK (INR), MapStruct, Lombok, Thymeleaf (only a trivial home template).
 
 ## Verified product fields and operations
@@ -15,11 +15,11 @@ Product entity / DTO fields (verified in `products/Product.java`, `ProductDto.ja
 `id` (Long), `name`, `description`, `price` (BigDecimal), `categoryId` (Byte).
 
 Operations (verified in `products/ProductController.java`):
-- `GET /products` — list all; optional `?categoryId=` filter.
-- `GET /products/{id}` — single product; 404 handling via `ProductNotFoundException`.
-- `POST /products` — admin only (see below).
-- `PUT /products/{id}` — admin only.
-- `DELETE /products/{id}` — admin only.
+- `GET /products` - list all; optional `?categoryId=` filter.
+- `GET /products/{id}` - single product; 404 handling via `ProductNotFoundException`.
+- `POST /products` - admin only (see below).
+- `PUT /products/{id}` - admin only.
+- `DELETE /products/{id}` - admin only.
 
 Create/update request bodies (`AddProductRequest`, `UpdateProductRequest`): only
 `name`, `description`, `price`, `categoryId`. There is no image, stock, variant, rating,
@@ -42,7 +42,7 @@ discount, unit, or slug field anywhere in the product model.
 ## Actual cart and order behaviour
 
 Cart (`carts/CartController.java`, `CartService.java`):
-- Anonymous cart, identified by a UUID — no login required to create or use a cart.
+- Anonymous cart, identified by a UUID - no login required to create or use a cart.
 - `POST /carts` → 201 with a cart DTO; `GET /carts/{cartId}`; `POST /carts/{cartId}/items`
   with `{productId}` (adds quantity 1); `PUT /carts/{cartId}/items/{productId}` with
   `{quantity}`; `DELETE /carts/{cartId}/items/{productId}`; `DELETE /carts/{cartId}/items`
@@ -68,12 +68,12 @@ Auth (`auth/AuthController.java`, `AuthService.java`, `JwtService.java`, `JwtCon
 - `GET /auth/me` returns the current user.
 - **No logout endpoint exists.** There is no endpoint that revokes or clears tokens.
 - Roles: `USER` and `ADMIN` (JWT claim `role`; authorities are `ROLE_<role>`).
-- Registration: `POST /users` — `UserService` forces every new registration to `Role.USER`;
+- Registration: `POST /users` - `UserService` forces every new registration to `Role.USER`;
   an admin must be promoted directly in the database.
 - `UserDto` exposes only `id`, `name`, `email`. `PUT /users/{id}` updates name/email;
   `POST /users/{id}/change-password` changes a password. Registration validation: email must
   be lowercase (custom `@LowerCase` validator), password 6–25 characters (verified in
-  `RegisterUserRequest` / `LowerCaseValidator` — the exact bounds should be re-checked
+  `RegisterUserRequest` / `LowerCaseValidator` - the exact bounds should be re-checked
   against the live DTO if Phase 2 reuses them).
 - Security: stateless sessions, CSRF disabled, unauthenticated requests → 401 via
   `HttpStatusEntryPoint`, forbidden → 403. Public routes are defined per-feature
@@ -107,10 +107,10 @@ Verified in `payments/CheckoutService.java`, `StripePaymentGateway.java`, `Strip
   and unreadable bodies to 400 "Invalid Request body."
 - Per-controller handlers exist for cart-not-found (404), product-not-found (400 on add),
   order-not-found (404), and access-denied (403). Error shape is not uniform across
-  controllers (`ErrorDto` vs ad-hoc `Map` bodies) — a Phase 2 client must not assume one
+  controllers (`ErrorDto` vs ad-hoc `Map` bodies) - a Phase 2 client must not assume one
   error format.
 
-## Missing capabilities (verified absent — do not invent)
+## Missing capabilities (verified absent - do not invent)
 
 - No product images, image URLs, or image upload.
 - No stock / inventory counts, stock reservations, or low-stock behaviour.
@@ -118,7 +118,7 @@ Verified in `payments/CheckoutService.java`, `StripePaymentGateway.java`, `Strip
 - No product variants, units, weights, or slugs.
 - No reviews, ratings, discounts, coupons, or promotional pricing.
 - No delivery slots, delivery zones, delivery fees, or delivery tracking.
-- No wishlist endpoints, and no address endpoints — even though `Address` and `Profile`
+- No wishlist endpoints, and no address endpoints - even though `Address` and `Profile`
   entities (and repositories) exist in the codebase, they have **no REST endpoints**.
 - No `GET /categories` endpoint (see above).
 - No logout, no password-reset flow, no email verification.
@@ -131,9 +131,9 @@ Verified in `payments/CheckoutService.java`, `StripePaymentGateway.java`, `Strip
 2. Whether `PUT /products/{id}` returns a body or 204 in practice (controller returns `Void`).
 3. Whether the seeded V5 catalogue is the live production catalogue or has since changed.
 4. The deployed backend's current CORS posture (none found in code, but a reverse proxy
-   could add headers — verify against the live deployment before Phase 2).
+   could add headers - verify against the live deployment before Phase 2).
 5. Stripe webhook event types actually handled (checkout session completed vs payment intent
-   events) — the handler extracts an order id and a PAID/FAILED result, but the exact event
+   events) - the handler extracts an order id and a PAID/FAILED result, but the exact event
    mapping should be confirmed from the webhook code path before relying on it.
 
 ## Frontend concepts: supported vs future backend work

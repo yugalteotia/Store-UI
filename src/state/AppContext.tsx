@@ -239,7 +239,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Session restore: silent refresh via the HttpOnly cookie, then /auth/me.
-  // Failure is not an error state — it just means "signed out".
+  // Failure is not an error state - it just means "signed out".
   useEffect(() => {
     let cancelled = false
     ;(async () => {
@@ -283,7 +283,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     async (productId: number, qty = 1) => {
       // Optimistic: the basket count / total update NOW, no waiting for
       // the backend round-trip(s). The old code awaited add + GET cart
-      // and disabled every Add button (cartBusy) meanwhile — that wait
+      // and disabled every Add button (cartBusy) meanwhile - that wait
       // is what made adding feel slow on a hosted backend.
       const prevLines = cartRef.current
       const prevTotal = cartTotalRef.current
@@ -403,7 +403,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     // Ask the backend to clear the refresh-token cookie FIRST: the cookie
-    // is HttpOnly, so JS cannot delete it — only the backend can, via
+    // is HttpOnly, so JS cannot delete it - only the backend can, via
     // POST /auth/logout. Without that endpoint, the next page load's
     // POST /auth/refresh silently signs the same user back in.
     // Local state is cleared regardless, so logout always works from the

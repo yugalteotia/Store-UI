@@ -1,7 +1,7 @@
 /**
  * Centralised HTTP client for the real Store REST API.
  *
- * Base URL: VITE_API_BASE_URL when set (direct mode — only usable once the
+ * Base URL: VITE_API_BASE_URL when set (direct mode - only usable once the
  * backend has CORS for the frontend origin, a separate approved backend
  * change). Empty by default: local dev goes through the Vite proxy in
  * vite.config.ts, so the browser is same-origin with the backend and the
@@ -64,7 +64,7 @@ function kindForStatus(status: number): ApiErrorKind {
   if (status >= 500) return 'server'
   if (status === 400) {
     // A field-error map is a validation failure; a bare {error} is also
-    // surfaced as validation by default — callers may re-map by message.
+    // surfaced as validation by default - callers may re-map by message.
     return 'validation'
   }
   return 'unexpected'
@@ -173,7 +173,7 @@ export interface RequestOptions {
  * refresh and retries once; if that fails the token is cleared and an
  * `auth` ApiError is thrown (callers route the user to /login).
  * Non-idempotent writes are never auto-retried beyond that single
- * auth-refresh retry — a timed-out write is reported as uncertain, not
+ * auth-refresh retry - a timed-out write is reported as uncertain, not
  * silently re-sent (see services/checkout and the Checkout page).
  */
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -184,7 +184,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     res = await rawFetch(path, { method, body }, getAccessToken())
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
-      throw new ApiError('network', 'The request timed out. The server may still have processed it — check your orders before retrying.')
+      throw new ApiError('network', 'The request timed out. The server may still have processed it - check your orders before retrying.')
     }
     throw new ApiError('network', 'Could not reach the server. Check your connection and that the backend is running.')
   }
@@ -216,7 +216,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 }
 
 /** Checkout URLs must be Stripe-hosted HTTPS URLs. Anything else is
- *  rejected rather than followed — a user-controlled or attacker-controlled
+ *  rejected rather than followed - a user-controlled or attacker-controlled
  *  redirect target must never be trusted. */
 export function isValidStripeCheckoutUrl(url: string): boolean {
   try {

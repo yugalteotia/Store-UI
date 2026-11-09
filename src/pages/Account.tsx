@@ -54,7 +54,7 @@ function AccountShell({ title, children }: { title: string; children: React.Reac
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <h1 className="font-serif text-4xl font-bold">{title}</h1>
-      <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">Real account area — orders and profile come from the Store API. The backend profile has only name and email; there is no phone or city field.</p>
+      <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">Real account area - orders and profile come from the Store API. The backend profile has only name and email; there is no phone or city field.</p>
       <Tabs />
       <div className="mt-8">{children}</div>
     </main>
@@ -76,7 +76,7 @@ function AccountBody() {
         <Link to="/account/orders" className="mt-4 inline-block font-semibold text-citrusdark underline">View orders</Link>
       </section>
       <button type="button" onClick={logout} className="rounded-full border border-plum/20 px-6 py-3 font-semibold dark:border-white/20 md:col-span-2 justify-self-start">Sign out</button>
-      <p className="text-xs text-plum/60 dark:text-cream/60 md:col-span-2">Note: the backend has no logout endpoint, so signing out clears this browser&apos;s session only. The refresh cookie remains until it expires — a separate backend change would be needed to invalidate it server-side.</p>
+      <p className="text-xs text-plum/60 dark:text-cream/60 md:col-span-2">Note: the backend has no logout endpoint, so signing out clears this browser&apos;s session only. The refresh cookie remains until it expires - a separate backend change would be needed to invalidate it server-side.</p>
     </div>
   )
 }

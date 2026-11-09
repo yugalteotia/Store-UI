@@ -106,12 +106,12 @@ export function Shop() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <h1 className="font-serif text-4xl font-bold sm:text-5xl">Shop the market</h1>
-      <p className="mt-2 text-plum/60 dark:text-cream/60">Live catalogue from the Store API. Search and sorting run over the loaded list — the backend itself has no search, sort or pagination. Prices are in INR.</p>
+      <p className="mt-2 text-plum/60 dark:text-cream/60">Live catalogue from the Store API. Search and sorting run over the loaded list - the backend itself has no search, sort or pagination. Prices are in INR.</p>
       {productsStatus === 'loading' && <p role="status" className="mt-6 rounded-3xl bg-paper p-6 dark:bg-white/5">Loading the market…</p>}
       {productsStatus === 'error' && (
         <div role="alert" className="mt-6 rounded-3xl bg-paper p-6 dark:bg-white/5">
           <p className="font-semibold">Couldn&apos;t load the catalogue.</p>
-          <p className="mt-1 text-sm text-plum/60 dark:text-cream/60">{productsError} The backend may be down — nothing here is a cached or mock substitute.</p>
+          <p className="mt-1 text-sm text-plum/60 dark:text-cream/60">{productsError} The backend may be down - nothing here is a cached or mock substitute.</p>
           <button type="button" onClick={() => void reloadProducts()} className="mt-4 rounded-full bg-plum px-6 py-3 font-semibold text-cream">Retry</button>
         </div>
       )}
@@ -131,7 +131,7 @@ export function Shop() {
         <section aria-label="Products">
           <p role="status" className="text-sm font-semibold">
             {results.length} result{results.length === 1 ? '' : 's'}
-            {activeFilters.length > 0 && ` — ${activeFilters.join(' · ')}`}
+            {activeFilters.length > 0 && ` - ${activeFilters.join(' · ')}`}
           </p>
           {activeFilters.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">

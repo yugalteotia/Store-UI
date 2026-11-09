@@ -20,8 +20,8 @@ function AdminBanner() {
     return (
       <p role="note" className="mt-3 rounded-2xl bg-butter/70 px-4 py-3 text-sm font-semibold text-plum">
         Product management is ADMIN-only on the backend (POST/PUT/DELETE /products return 403 for
-        regular customers). Sign in with an admin account to use these forms. The backend — not
-        this page — enforces that rule.
+        regular customers). Sign in with an admin account to use these forms. The backend - not
+        this page - enforces that rule.
       </p>
     )
   }
@@ -30,15 +30,15 @@ function AdminBanner() {
       <p role="note" className="mt-3 rounded-2xl bg-butter/70 px-4 py-3 text-sm font-semibold text-plum">
         You are signed in, but the admin check did not confirm admin access for this account, so
         these forms are disabled. If you are an admin, the backend will still accept your changes;
-        otherwise it will return 403. (ORCHARD cannot read your role from /auth/me — it returns
-        only id, name and email — so this banner is a hint from GET /admin/hello, not security.)
+        otherwise it will return 403. (ORCHARD cannot read your role from /auth/me - it returns
+        only id, name and email - so this banner is a hint from GET /admin/hello, not security.)
       </p>
     )
   }
   return (
     <p role="note" className="mt-3 rounded-2xl bg-butter/70 px-4 py-3 text-sm font-semibold text-plum">
       Admin workspace: changes go straight to the live catalogue via POST/PUT/DELETE /products.
-      There is no inventory, supplier, delivery or analytics module — the backend has none.
+      There is no inventory, supplier, delivery or analytics module - the backend has none.
     </p>
   )
 }
@@ -188,7 +188,7 @@ export function ManageProductNew() {
       <div className="mt-6">
         {msg && <p role="status" className="mb-4 rounded-xl bg-leaf/15 px-4 py-3 text-sm font-semibold">{msg}</p>}
         {err && <p role="alert" className="mb-4 rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-700 dark:bg-white/5 dark:text-red-300">{err}</p>}
-        <p className="mb-4 text-sm text-plum/60 dark:text-cream/60">The backend stores only name, description, price and category. No image is uploaded — the shop will show the local placeholder for the product name, or its category photo.</p>
+        <p className="mb-4 text-sm text-plum/60 dark:text-cream/60">The backend stores only name, description, price and category. No image is uploaded - the shop will show the local placeholder for the product name, or its category photo.</p>
         <ProductFormInner
           disabled={!isAdminHint}
           onSaved={async (data) => {

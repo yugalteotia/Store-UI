@@ -16,7 +16,7 @@ function statusNote(status: string): string {
     case 'CANCELLED':
       return 'This order was cancelled.'
     default:
-      return 'Payment not yet confirmed — the server is still waiting on Stripe. Wait a moment and refresh this page; do not treat the return from Stripe as proof of payment.'
+      return 'Payment not yet confirmed - the server is still waiting on Stripe. Wait a moment and refresh this page; do not treat the return from Stripe as proof of payment.'
   }
 }
 
