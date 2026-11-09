@@ -1,4 +1,4 @@
-# ORCHARD hosting connection plan — DRAFT, NOT APPLIED
+# ORCHARD hosting connection plan - DRAFT, NOT APPLIED
 
 Status: **prepared for approval only.** Nothing in this document has been
 pushed to GitHub, applied to the backend repo, or applied to any live
@@ -9,11 +9,11 @@ deployment. The backend was inspected from a fresh read-only clone
 
 | Placeholder | What it is | Why it cannot be guessed |
 |---|---|---|
-| `<FRONTEND_ORIGIN>` | Exact deployed frontend origin, e.g. `https://orchard.example.com` — scheme + host (+ port if non-standard), **no trailing slash, no path** | CORS `allowedOrigins` and Stripe `websiteUrl` both require an exact origin. A wrong value = blocked API calls or Stripe returns landing nowhere. |
+| `<FRONTEND_ORIGIN>` | Exact deployed frontend origin, e.g. `https://orchard.example.com` - scheme + host (+ port if non-standard), **no trailing slash, no path** | CORS `allowedOrigins` and Stripe `websiteUrl` both require an exact origin. A wrong value = blocked API calls or Stripe returns landing nowhere. |
 | Frontend host platform | Vercel, Netlify, GitHub Pages, or another static host | SPA fallback and base-path handling differ per host (see §5). |
 | Backend deployment target | Confirm the prod backend to patch is the existing `https://store-rest-api.hostless.app` deployment | The patch changes `application-prod.yaml`; it only takes effect when that deployment is rebuilt/redeployed with the prod profile. |
 
-Until `<FRONTEND_ORIGIN>` is known, **do not apply the patch** — a patch
+Until `<FRONTEND_ORIGIN>` is known, **do not apply the patch** - a patch
 with a placeholder in it would break Stripe returns and CORS outright.
 
 ## 1. Current state (verified, not assumed)
@@ -28,7 +28,7 @@ with a placeholder in it would break Stripe returns and CORS outright.
   `Content-Type: application/json`. The access token lives in memory only;
   reloads restore it via `POST /auth/refresh`, which reads the HttpOnly
   refresh cookie.
-- Backend: **no CORS configuration exists anywhere** — no
+- Backend: **no CORS configuration exists anywhere** - no
   `CorsConfiguration`, `WebMvcConfigurer`, `allowedOrigins`, or `http.cors()`
   was found in the clone. A direct browser call from any other origin is
   therefore blocked by the browser today, even though the API itself is up.
@@ -49,12 +49,12 @@ with a placeholder in it would break Stripe returns and CORS outright.
   catalogue. The backend is up; the blockers are purely CORS +
   `websiteUrl`, not availability.
 
-## 2. Backend patch (draft — see `backend-hosting-patch.diff` beside this file)
+## 2. Backend patch (draft - see `backend-hosting-patch.diff` beside this file)
 
 Apply in the Store-REST-API repo, then redeploy the prod backend. Three
 files, nothing else:
 
-1. **NEW** `src/main/java/com/yugal/store/commons/CorsConfig.java` —
+1. **NEW** `src/main/java/com/yugal/store/commons/CorsConfig.java` -
    a `CorsConfigurationSource` bean:
    - `allowedOrigins`: exactly `["<FRONTEND_ORIGIN>"]`
    - `allowedMethods`: `GET, POST, PUT, DELETE, OPTIONS`
@@ -62,11 +62,11 @@ files, nothing else:
      PUT/DELETE)
    - `allowedHeaders`: `Authorization, Content-Type` (the only headers
      the frontend sends)
-   - `allowCredentials: true` — required because the frontend uses
+   - `allowCredentials: true` - required because the frontend uses
      `credentials: 'include'` and the refresh flow is cookie-based
    - `maxAge: 3600` (1 hour of preflight caching; browsers cap this anyway)
    - Applied to `/**`.
-2. **MODIFIED** `src/main/java/com/yugal/store/auth/SecurityConfig.java` —
+2. **MODIFIED** `src/main/java/com/yugal/store/auth/SecurityConfig.java` -
    add `.cors(Customizer.withDefaults())` to the filter chain.
    **Why this line matters:** a `WebMvcConfigurer` CORS mapping alone
    does not reliably let preflight `OPTIONS` requests past Spring
@@ -74,9 +74,9 @@ files, nothing else:
    filter chain makes Spring apply the `CorsConfigurationSource` bean
    before the authorisation checks, so a preflight to e.g. `POST
    /checkout` is answered instead of 401'd. No authorisation rule is
-   weakened by this change — it only answers preflights and adds the
+   weakened by this change - it only answers preflights and adds the
    CORS headers for the one listed origin.
-3. **MODIFIED** `src/main/resources/application-prod.yaml` —
+3. **MODIFIED** `src/main/resources/application-prod.yaml` -
    `websiteUrl: <FRONTEND_ORIGIN>` (was the backend host). Dev yaml is
    unchanged.
 
@@ -90,14 +90,14 @@ files, nothing else:
   browser. The whole point of the list above is that exactly one origin
   is trusted.
 
-### Cookie / SameSite — the second, separate decision (read this)
+### Cookie / SameSite - the second, separate decision (read this)
 
 The refresh cookie is set in
 `src/main/java/com/yugal/store/auth/AuthController.java` (login):
 `HttpOnly, path=/auth/refresh, maxAge=7 days, Secure=true`, **no
 SameSite attribute**. Browsers therefore default it to `Lax`.
 
-- Local dev (same-origin via proxy): unaffected — the cookie is
+- Local dev (same-origin via proxy): unaffected - the cookie is
   first-party and is sent.
 - Hosted cross-origin: the cookie belongs to the backend host while the
   page is on the frontend host, i.e. it is a **cross-site** cookie.
@@ -114,12 +114,12 @@ SameSite attribute**. Browsers therefore default it to `Lax`.
   .sameSite("None").path("/auth/refresh").maxAge(7 days).build()` and set
   it as a header. Trade-off to accept knowingly: `SameSite=None` makes
   the cookie sendable cross-site, so the refresh endpoint must stay
-  CORS-restricted to the one origin (it is, per Patch A) — a malicious
+  CORS-restricted to the one origin (it is, per Patch A) - a malicious
   site could trigger the request, but cannot read the new token back
   because its origin is not in `allowedOrigins`.
 - Alternative if Patch B is declined: accept re-login after reload /
   token expiry on the hosted site, and document it in the UI. Do not
-  work around it by storing the access token in `localStorage` — that
+  work around it by storing the access token in `localStorage` - that
   would be a worse, permanent exposure than the current in-memory token.
 
 ### CSRF note
@@ -133,7 +133,7 @@ existing backend posture, not a new weakening introduced by hosting.
 The backend test suite in the clone is a single
 `src/test/java/com/yugal/store/StoreApplicationTests.java` (context-load
 only) and needs MySQL + environment variables, so it could not be run
-from this VM — run it where the backend is built/deployed, not here.
+from this VM - run it where the backend is built/deployed, not here.
 Add one focused test (e.g. a `@WebMvcTest`/`MockMvc` preflight test):
 
 - `OPTIONS /products` with `Origin: <FRONTEND_ORIGIN>`,
@@ -163,7 +163,7 @@ variable, not a code patch:
 - `VITE_API_BASE_URL` **must** be set at build time to the deployed
   backend origin, e.g. `VITE_API_BASE_URL=https://store-rest-api.hostless.app`.
   It is baked into the bundle by Vite (`import.meta.env`), so changing
-  it requires a rebuild — it cannot be changed at runtime on a static host.
+  it requires a rebuild - it cannot be changed at runtime on a static host.
 - Leaving it empty on a static host does **not** work: there is no Vite
   proxy in production, so relative `/products` calls would hit the
   frontend host itself and 404. Empty = local proxy mode only.
@@ -180,8 +180,8 @@ committed or pushed):
 VITE_API_BASE_URL=https://store-rest-api.hostless.app npm run build
 ```
 
-- Result: **build passes** (see report — exact output recorded there).
-- The built bundle contains the backend origin string (expected — that
+- Result: **build passes** (see report - exact output recorded there).
+- The built bundle contains the backend origin string (expected - that
   is the configured API base, not a secret).
 - Secret scan of `dist/`: no Stripe secret keys, JWT secrets, DB
   credentials, or tokens were found (checked for `sk_live`/`sk_test`,
@@ -193,7 +193,7 @@ VITE_API_BASE_URL=https://store-rest-api.hostless.app npm run build
   the §2 SameSite decision. Do not claim hosted integration works on
   the basis of this build.
 
-## 5. SPA fallback — required on every static host
+## 5. SPA fallback - required on every static host
 
 The app uses `BrowserRouter` (no basename, Vite `base` default `/`).
 These routes must all serve `index.html` on refresh / deep link, not 404:
@@ -202,19 +202,19 @@ These routes must all serve `index.html` on refresh / deep link, not 404:
 `/checkout-success`, `/checkout-cancel`, `/login`, `/register`,
 `/account`, `/account/*`, `/manage`, `/manage/*`
 
-- **Vercel** — `vercel.json` (added to the orchard workspace only, not
+- **Vercel** - `vercel.json` (added to the orchard workspace only, not
   pushed): a single rewrite `{"source": "/(.*)", "destination":
   "/index.html"}`. API calls are absolute to the backend origin in
   direct mode, so the rewrite cannot swallow them.
-- **Netlify** — `netlify.toml` (added to the orchard workspace only, not
+- **Netlify** - `netlify.toml` (added to the orchard workspace only, not
   pushed): `[[redirects]] from = "/*" to = "/index.html" status = 200`
   (default `force = false`, so real static assets still win over the
   redirect).
-- **GitHub Pages — least suitable, caveat:** Pages has no rewrite
+- **GitHub Pages - least suitable, caveat:** Pages has no rewrite
   rules. The usual workaround is a `404.html` that is a copy of
   `index.html`, which is fragile, and a project page
   (`<user>.github.io/<repo>/`) additionally requires Vite `base:
-  '/<repo>/'` **and** a matching router basename — the current app has
+  '/<repo>/'` **and** a matching router basename - the current app has
   neither. Only use Pages with a custom domain at the site root (plus
   the `404.html` copy), or prefer Vercel/Netlify. Do not deploy to a
   project-page subpath without first changing `base` + basename and
@@ -246,14 +246,14 @@ These routes must all serve `index.html` on refresh / deep link, not 404:
 7. [ ] Confirm no real charges, no production Stripe keys, and no
        secrets were added to any frontend file, host env var, or doc.
 
-## 7. Files prepared (orchard workspace only — NOT pushed)
+## 7. Files prepared (orchard workspace only - NOT pushed)
 
-- `docs/hosting-connection-plan.md` — this file.
-- `docs/backend-hosting-patch.diff` — Patch A (CORS + `websiteUrl`),
+- `docs/hosting-connection-plan.md` - this file.
+- `docs/backend-hosting-patch.diff` - Patch A (CORS + `websiteUrl`),
   with `<FRONTEND_ORIGIN>` placeholders, ready to fill in and apply in
   the backend repo after approval.
-- `vercel.json` — SPA rewrite only, no secrets.
-- `netlify.toml` — SPA redirect only, no secrets.
+- `vercel.json` - SPA rewrite only, no secrets.
+- `netlify.toml` - SPA redirect only, no secrets.
 - No file in `~/workspace/store-ui` was changed, no branch was created
   or pushed, and the backend clone in `/tmp/orchard-host-prep` was left
   unmodified.

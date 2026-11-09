@@ -80,7 +80,7 @@ export function Header() {
       </div>
       {cartError && (
         <div role="alert" className="border-t border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-          Basket update failed: {cartError} — <Link to="/cart" className="font-semibold underline">check your basket</Link>
+          Basket update failed: {cartError} - <Link to="/cart" className="font-semibold underline">check your basket</Link>
         </div>
       )}
       {open && (

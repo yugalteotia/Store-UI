@@ -1,7 +1,7 @@
 /**
  * ORCHARD view models (Phase 2: backed by the real Store REST API).
  *
- * Product.id is the real backend Long id — never a slug or a mock id.
+ * Product.id is the real backend Long id - never a slug or a mock id.
  * Product.categoryId is the real backend Byte category id (seed order
  * 1–10; see api/categories.ts). The backend sends NO image, NO unit,
  * NO stock, NO rating, NO seasonal/featured flag:

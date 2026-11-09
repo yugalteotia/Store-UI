@@ -117,7 +117,7 @@ export function Register() {
       <h1 className="font-serif text-4xl font-bold">Join the market</h1>
       <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">
         Real registration (POST /users). The backend requires a lowercase email and a password of
-        6–25 characters, and every new account starts as a regular customer — admin accounts are
+        6–25 characters, and every new account starts as a regular customer - admin accounts are
         promoted in the database, never from this form.
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5 rounded-3xl bg-paper p-6 shadow-card dark:bg-white/5" noValidate>

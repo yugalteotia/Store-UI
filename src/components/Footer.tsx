@@ -31,9 +31,9 @@ export function Footer() {
         </nav>
         <div>
           <p className="text-sm font-semibold">Market notes</p>
-          <p className="mt-2 text-sm text-cream/70">A short note now and then. This form works locally only — nothing is sent.</p>
+          <p className="mt-2 text-sm text-cream/70">A short note now and then. This form works locally only - nothing is sent.</p>
           {done ? (
-            <p role="status" className="mt-3 rounded-xl bg-leaf px-4 py-3 text-sm">Thanks — noted locally. No email was sent.</p>
+            <p role="status" className="mt-3 rounded-xl bg-leaf px-4 py-3 text-sm">Thanks - noted locally. No email was sent.</p>
           ) : (
             <form onSubmit={submit} className="mt-3 flex gap-2">
               <label htmlFor="newsletter-email" className="sr-only">Email for market notes</label>
@@ -52,7 +52,7 @@ export function Footer() {
         </div>
       </div>
       <p className="border-t border-white/10 py-4 text-center text-xs text-cream/50">
-        ORCHARD — The Living Market · Photos are generic placeholders, not brand packshots.
+        ORCHARD - The Living Market · Photos are generic placeholders, not brand packshots.
       </p>
     </footer>
   )

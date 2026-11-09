@@ -33,7 +33,7 @@ export function ProductDetail() {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 text-center">
         <h1 className="font-serif text-4xl font-bold">{productsStatus === 'loading' && !detailError ? 'Loading product…' : 'Product not found'}</h1>
-        <p className="mt-3 text-plum/60 dark:text-cream/60">{detailError ?? 'That product isn\'t in the live catalogue — it may have been removed, or the backend may be down.'}</p>
+        <p className="mt-3 text-plum/60 dark:text-cream/60">{detailError ?? 'That product isn\'t in the live catalogue - it may have been removed, or the backend may be down.'}</p>
         <Link to="/shop" className="mt-6 inline-block rounded-full bg-plum px-6 py-3 font-semibold text-cream">Back to shop</Link>
       </main>
     )
@@ -61,7 +61,7 @@ export function ProductDetail() {
           <p className="mt-6">
             <span className="font-serif text-4xl font-bold">{formatINR(product.price)}</span>
           </p>
-          <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">Pack size is stated in the product name — the catalogue sends no separate unit, stock or rating.</p>
+          <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">Pack size is stated in the product name - the catalogue sends no separate unit, stock or rating.</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <div className="flex items-center rounded-full border border-plum/20 dark:border-white/20" role="group" aria-label="Quantity">

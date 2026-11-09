@@ -293,7 +293,7 @@ describe('Checkout submission', () => {
     await user.click(screen.getByRole('button', { name: 'Continue to secure Stripe checkout' }))
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent(
-      'The server returned a checkout address that is not a Stripe address. Nothing was opened — this is a safety stop, not a payment.',
+      'The server returned a checkout address that is not a Stripe address. Nothing was opened - this is a safety stop, not a payment.',
     )
     expect(setLastCheckoutOrderId).not.toHaveBeenCalled()
     expect(refreshCart).not.toHaveBeenCalled()
@@ -310,7 +310,7 @@ describe('Checkout submission', () => {
     await user.click(screen.getByRole('button', { name: 'Continue to secure Stripe checkout' }))
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent(
-      'The checkout request did not complete cleanly. The order may already exist — check your orders before trying again.',
+      'The checkout request did not complete cleanly. The order may already exist - check your orders before trying again.',
     )
     expect(screen.getByRole('link', { name: 'Check my orders' })).toHaveAttribute('href', '/account/orders')
     expect(screen.getByRole('button', { name: 'Continue to secure Stripe checkout' })).toBeEnabled()
@@ -324,7 +324,7 @@ describe('Checkout submission', () => {
     renderCheckout()
     await user.click(screen.getByRole('button', { name: 'Continue to secure Stripe checkout' }))
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent('Please sign in to check out — checkout requires an account.')
+    expect(alert).toHaveTextContent('Please sign in to check out - checkout requires an account.')
     expect(screen.queryByRole('link', { name: 'Check my orders' })).not.toBeInTheDocument()
   })
 

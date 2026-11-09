@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Backend-consistent validation (RegisterUserRequest, AuthRequestDto,
 // ChangePasswordRequest). The backend has NO max on login passwords and
-// NO validation at all on PUT /users or change-password bodies — the
+// NO validation at all on PUT /users or change-password bodies - the
 // frontend still validates locally so a typo is caught before a request.
 export const loginSchema = z.object({
   email: z.string().email('Enter a valid email address'),

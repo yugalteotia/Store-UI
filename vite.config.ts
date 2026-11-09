@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 
 // Phase 2: the browser talks to the real Store API through this dev proxy.
 // The backend has NO CORS configuration, so a direct browser call from a
-// different origin would be blocked — the proxy keeps the page and the API
+// different origin would be blocked - the proxy keeps the page and the API
 // same-origin, which is also what lets the HttpOnly refresh cookie
 // (path /auth/refresh) work. This is a local-dev mechanism only; a
 // separately-hosted production frontend needs an approved backend CORS

@@ -58,18 +58,18 @@ function OrderStatus({ orderId }: { orderId: number }) {
   }
   return (
     <div>
-      <p className="text-lg">Order #{order.id} — payment status: <strong>{order.status}</strong></p>
+      <p className="text-lg">Order #{order.id} - payment status: <strong>{order.status}</strong></p>
       {order.status === 'PENDING' && (
         <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">
           Still PENDING: Stripe&apos;s webhook has not confirmed this payment yet. Wait a moment
-          and refresh — do not re-pay, and do not treat this return page as a receipt.
+          and refresh - do not re-pay, and do not treat this return page as a receipt.
         </p>
       )}
       {order.status === 'PAID' && <p className="mt-2 text-sm">Payment confirmed by the server.</p>}
       {order.status === 'FAILED' && <p className="mt-2 text-sm">The server records this payment as failed. No delivery is coming from it.</p>}
       <ul className="mt-4 space-y-2">
         {order.items.map((i) => (
-          <li key={i.productId} className="text-sm">{i.quantity} × {i.name} — {formatINR(i.unitPrice * i.quantity)}</li>
+          <li key={i.productId} className="text-sm">{i.quantity} × {i.name} - {formatINR(i.unitPrice * i.quantity)}</li>
         ))}
       </ul>
       <p className="mt-4 font-bold">Total: {formatINR(order.total)}</p>
@@ -85,7 +85,7 @@ export function CheckoutSuccess() {
     <main className="mx-auto max-w-3xl px-4 py-16">
       <h1 className="font-serif text-4xl font-bold">Back from Stripe</h1>
       <p className="mt-3 text-plum/60 dark:text-cream/60">
-        You returned from Stripe. This page checks the order on the server — the return URL
+        You returned from Stripe. This page checks the order on the server - the return URL
         alone never proves payment.
       </p>
       <div className="mt-6 rounded-3xl bg-paper p-6 shadow-card dark:bg-white/5">
@@ -103,7 +103,7 @@ export function CheckoutCancel() {
       <p className="mt-3 text-plum/60 dark:text-cream/60">
         You left Stripe without completing payment. No payment was taken by this return page.
         The order created before Stripe (if any) stays PENDING on the server until Stripe&apos;s
-        webhook says otherwise — check your orders list to see it.
+        webhook says otherwise - check your orders list to see it.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link to="/cart" className="rounded-full bg-plum px-6 py-3 font-semibold text-cream">Back to basket</Link>

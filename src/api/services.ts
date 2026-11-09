@@ -58,7 +58,7 @@ export async function login(email: string, password: string): Promise<RealUser> 
 }
 
 // Server-side logout: asks the backend to clear the refresh-token cookie.
-// The cookie is HttpOnly, so the frontend CANNOT delete it itself — only
+// The cookie is HttpOnly, so the frontend CANNOT delete it itself - only
 // the backend (Set-Cookie with Max-Age=0) can. Requires the backend to
 // expose POST /auth/logout; callers must still clear local state even if
 // this throws (e.g. endpoint not deployed yet).
