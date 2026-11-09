@@ -64,10 +64,10 @@ Full matrix: `docs/api-contract-matrix.md`. Headlines:
 | Area | Verified contract |
 |---|---|
 | Products | `GET /products`, `GET /products?categoryId=N`, `GET /products/{id}` public; `POST/PUT/DELETE /products` ADMIN-only. DTO `{id, name, description, price, categoryId}` - no image, unit, stock, rating, search, pagination, sort. |
-| Categories | **No endpoint.** Categories are seed migration V5 rows, IDs 1–10 in seed order. Frontend maps `categoryId` to those names (documented as seed-derived). |
-| Cart | Public, anonymous UUID. `POST /carts` (201), `GET /carts/{id}`, `POST …/items {productId}` (adds exactly 1), `PUT …/items/{id} {quantity}` (1–1000), `DELETE …/items/{id}`, `DELETE …/items`. Response carries server `totalPrice`. No user link, no merge. |
+| Categories | **No endpoint.** Categories are seed migration V5 rows, IDs 1-10 in seed order. Frontend maps `categoryId` to those names (documented as seed-derived). |
+| Cart | Public, anonymous UUID. `POST /carts` (201), `GET /carts/{id}`, `POST …/items {productId}` (adds exactly 1), `PUT …/items/{id} {quantity}` (1-1000), `DELETE …/items/{id}`, `DELETE …/items`. Response carries server `totalPrice`. No user link, no merge. |
 | Auth | `POST /auth/login` → `{token}`, sets HttpOnly `Secure` refresh cookie (path `/auth/refresh`, 7 days). `POST /auth/refresh` → `{token}`. `GET /auth/me` → `{id, name, email}` only - **no role**. Access token 15 min. **No logout endpoint, no `/auth/register`.** |
-| Registration | `POST /users` (public) → 201 `{id, name, email}`, no token. Lowercase email, password 6–25, name ≤255. New accounts are forced `USER`. |
+| Registration | `POST /users` (public) → 201 `{id, name, email}`, no token. Lowercase email, password 6-25, name ≤255. New accounts are forced `USER`. |
 | Users | `GET /users`, `GET /users/{id}`, `PUT /users/{id}`, `DELETE /users/{id}`, `POST /users/{id}/change-password` exist, but the service layer has **no ownership check** - any authenticated user can call them for any id. The frontend calls only its own id (from `/auth/me`) and **never renders the user list**. |
 | Orders | **No `POST /orders`.** Orders are created by `POST /checkout`. `GET /orders` returns the current user's orders; `GET /orders/{id}` returns 403 for another user's order. `status` is a payment status (PENDING/PAID/FAILED/CANCELLED). |
 | Checkout | `POST /checkout {cartId}` (auth) → `{orderId, checkoutUrl}`. Creates a PENDING order, creates a Stripe Checkout Session, then clears the cart; on Stripe failure the order is deleted and the call returns 500. |

@@ -12,7 +12,7 @@ See `src/domain/types.ts`:
 - `Category` - `id`, `name`, `blurb`, `image`, `accent`. Fictional merchandising categories.
 - `Product` - `id`, `name`, `slug`, `description`, `price` (INR, whole rupees), `unitLabel`,
   `categoryId`, `image`, `isFeatured`, `isSeasonal`, optional `tagline`.
-- `CartLine` - `productId`, `quantity` (1–99, enforced by the repository).
+- `CartLine` - `productId`, `quantity` (1-99, enforced by the repository).
 - `OrderItem` / `DemoOrder` - snapshot of items at order time, `reference` (`ORC-######`),
   `createdAt` (ISO), `total`, customer name/contact, and a demo note.
 - `MockUser` - `id`, `name`, `email`, `phone`, `city`. No password field exists.

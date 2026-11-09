@@ -92,7 +92,7 @@ documentation (when running) is at `/swagger-ui/index.html`.
 | `/checkout` | Real checkout: review, then `POST /checkout` creates a PENDING order, clears the server basket, and redirects to Stripe's hosted page (URL allow-listed to HTTPS `*.stripe.com`). No card fields anywhere in ORCHARD. |
 | `/checkout-success`, `/checkout-cancel` | Stripe return pages. Success fetches the real order status from the server - a return URL alone never proves payment; PENDING means the webhook has not arrived yet. Cancel has no order id (backend sends none). |
 | `/checkout/result` | Order view by `?orderId=` or the last checkout, fetched from the server; graceful empty state on direct navigation |
-| `/login`, `/register` | Real auth: `POST /auth/login` (15-min access token in memory + HttpOnly refresh cookie) and `POST /users` (lowercase email, password 6–25, new accounts are regular customers). No demo account. |
+| `/login`, `/register` | Real auth: `POST /auth/login` (15-min access token in memory + HttpOnly refresh cookie) and `POST /users` (lowercase email, password 6-25, new accounts are regular customers). No demo account. |
 | `/account`, `/account/profile`, `/account/orders`, `/account/orders/:orderId`, `/account/security` | Real account: overview, profile edit (name/email only - the backend has no phone/city), order history/detail with payment status, real password change for your own account |
 | `/manage`, `/manage/products`, `/manage/products/new`, `/manage/products/:productId/edit` | Product management, ADMIN-only on the backend. Manage navigation shows only when `GET /admin/hello` succeeds (a UI hint, never security); the backend enforces every write with 403. No inventory/supplier/delivery/analytics - the backend has none. |
 

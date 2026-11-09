@@ -72,7 +72,7 @@ Auth (`auth/AuthController.java`, `AuthService.java`, `JwtService.java`, `JwtCon
   an admin must be promoted directly in the database.
 - `UserDto` exposes only `id`, `name`, `email`. `PUT /users/{id}` updates name/email;
   `POST /users/{id}/change-password` changes a password. Registration validation: email must
-  be lowercase (custom `@LowerCase` validator), password 6–25 characters (verified in
+  be lowercase (custom `@LowerCase` validator), password 6-25 characters (verified in
   `RegisterUserRequest` / `LowerCaseValidator` - the exact bounds should be re-checked
   against the live DTO if Phase 2 reuses them).
 - Security: stateless sessions, CSRF disabled, unauthenticated requests → 401 via

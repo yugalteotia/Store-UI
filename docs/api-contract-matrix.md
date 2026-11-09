@@ -34,7 +34,7 @@ never decodes claims for authorisation.
 
 | Method + path | Access | Request | Success | Errors / notes | Retry safe? |
 |---|---|---|---|---|---|
-| `POST /users` | Public | `{name (≤255), email (lowercase, valid), password (6–25)}` | 201 `{id, name, email}` + `Location: /users/{id}`. New account forced `Role.USER`; password BCrypt-hashed. **This is the registration endpoint - there is no `/auth/register`.** | 400 validation map; duplicate email → `DuplicateUserException`, which has **no handler** (controller claims 400, code likely yields Spring's default 500 body) - see plan §Unresolved | **No** (creates a user; a retried duplicate fails) |
+| `POST /users` | Public | `{name (≤255), email (lowercase, valid), password (6-25)}` | 201 `{id, name, email}` + `Location: /users/{id}`. New account forced `Role.USER`; password BCrypt-hashed. **This is the registration endpoint - there is no `/auth/register`.** | 400 validation map; duplicate email → `DuplicateUserException`, which has **no handler** (controller claims 400, code likely yields Spring's default 500 body) - see plan §Unresolved | **No** (creates a user; a retried duplicate fails) |
 | `GET /users` | Auth (any role) | Optional `?sort=name\|email` (anything else → `name`) | 200 `UserDto[]` | 401. ⚠️ No admin/ownership restriction in code - any authenticated user can list all users. **Frontend never calls this.** | Yes |
 | `GET /users/{id}` | Auth (any role) | - | 200 `{id, name, email}` | 401; 404 `ErrorDto{error}`. ⚠️ No ownership check. Frontend never calls it (uses `/auth/me`). | Yes |
 | `PUT /users/{id}` | Auth (any role) | `{name, email}` - **no validation annotations** | 200 `{id, name, email}` | 401; 404. ⚠️ No ownership check. Frontend calls it only with the id from `/auth/me`. | Yes (idempotent overwrite) |
@@ -56,7 +56,7 @@ on create/update (no `@Valid` on those controller methods).
 | `PUT /products/{id}` | ADMIN only | `{name, description, price, categoryId}` | 204 (empty, no body) - frontend reloads the list to confirm | 400 empty body if category missing; 404 if product missing; 401; 403 | Yes (overwrite) |
 | `DELETE /products/{id}` | ADMIN only | - | 204 (empty) | 404 if missing; 401; 403 | Yes |
 
-Categories (seed migration V5, in insert order → ids 1–10): 1 Fruits,
+Categories (seed migration V5, in insert order → ids 1-10): 1 Fruits,
 2 Vegetables, 3 Dairy, 4 Bakery, 5 Beverages, 6 Pantry Staples,
 7 Snacks, 8 Frozen Foods, 9 Personal Care, 10 Household Essentials.
 Seed products: 50 (5 per category). There is **no `GET /categories`**.

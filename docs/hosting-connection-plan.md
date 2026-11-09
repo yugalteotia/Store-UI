@@ -260,7 +260,7 @@ These routes must all serve `index.html` on refresh / deep link, not 404:
 
 ## 8. What remains blocked
 
-- Everything in §6 steps 2–7 is blocked on `<FRONTEND_ORIGIN>` + host
+- Everything in §6 steps 2-7 is blocked on `<FRONTEND_ORIGIN>` + host
   platform. Without the origin, the backend patch cannot be completed
   and the hosted build cannot be configured correctly.
 - Even after Patch A, cross-origin session restore after reload /

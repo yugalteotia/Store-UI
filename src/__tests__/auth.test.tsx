@@ -85,7 +85,7 @@ async function fillRegister(
 ) {
   await user.type(screen.getByLabelText('Name'), name)
   await user.type(screen.getByLabelText('Email (lowercase)'), email)
-  await user.type(screen.getByLabelText('Password (6–25 characters)'), password)
+  await user.type(screen.getByLabelText('Password (6-25 characters)'), password)
 }
 
 beforeEach(() => {
@@ -265,7 +265,7 @@ describe('Register rendering', () => {
     expect(screen.getByRole('heading', { name: 'Join the market' })).toBeInTheDocument()
     expect(screen.getByLabelText('Name')).toBeInTheDocument()
     expect(screen.getByLabelText('Email (lowercase)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Password (6–25 characters)')).toHaveAttribute('type', 'password')
+    expect(screen.getByLabelText('Password (6-25 characters)')).toHaveAttribute('type', 'password')
     expect(screen.getByRole('button', { name: 'Create account' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/login')
     expect(screen.getByText(/Real registration \(POST \/users\)/)).toBeInTheDocument()
