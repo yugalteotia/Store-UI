@@ -1,6 +1,6 @@
 /**
  * Categories, derived from the backend's seed migration V5 (there is NO
- * GET /categories endpoint). Seed order gives IDs 1–10 in this order.
+ * GET /categories endpoint). Seed order gives IDs 1-10 in this order.
  * Blurbs are ORCHARD UI copy only - they are not backend data.
  * Images are the local placeholder photos in public/images/ (generic
  * photos, not brand packshots), mapped by category name.

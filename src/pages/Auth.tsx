@@ -117,7 +117,7 @@ export function Register() {
       <h1 className="font-serif text-4xl font-bold">Join the market</h1>
       <p className="mt-2 text-sm text-plum/60 dark:text-cream/60">
         Real registration (POST /users). The backend requires a lowercase email and a password of
-        6–25 characters, and every new account starts as a regular customer - admin accounts are
+        6-25 characters, and every new account starts as a regular customer - admin accounts are
         promoted in the database, never from this form.
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5 rounded-3xl bg-paper p-6 shadow-card dark:bg-white/5" noValidate>
@@ -131,7 +131,7 @@ export function Register() {
           <input id="reg-email" type="email" {...register('email')} className={`${inputCls} mt-1`} />
           {errors.email && <p role="alert" className="mt-1 text-sm text-red-700 dark:text-red-300">{errors.email.message}</p>}
         </div>
-        <PasswordField id="reg-password" label="Password (6–25 characters)" error={errors.password?.message} register={register} />
+        <PasswordField id="reg-password" label="Password (6-25 characters)" error={errors.password?.message} register={register} />
         {msg && <p role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-700 dark:bg-white/5 dark:text-red-300">{msg}</p>}
         <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-plum py-3 font-semibold text-cream disabled:opacity-50">Create account</button>
         <p className="text-center text-sm">Already have an account? <Link to={`/login${nextQuery(params)}`} className="font-semibold text-citrusdark underline">Sign in</Link></p>

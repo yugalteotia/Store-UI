@@ -89,8 +89,8 @@ export function Shop() {
           className="mt-2 w-full rounded-full border border-plum/20 bg-paper px-4 py-2 text-sm dark:border-white/20 dark:bg-white/10"
         >
           <option value="default">Catalogue order</option>
-          <option value="name-asc">Name A–Z</option>
-          <option value="name-desc">Name Z–A</option>
+          <option value="name-asc">Name A-Z</option>
+          <option value="name-desc">Name Z-A</option>
           <option value="price-asc">Price: low to high</option>
           <option value="price-desc">Price: high to low</option>
         </select>
